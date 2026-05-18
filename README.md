@@ -4,7 +4,7 @@
 
 ---
 
-## 📋 Project Overview
+## Project Overview
 
 **FlashRescue** is an intelligent disaster response and evacuation platform that integrates real-time IoT sensor networks, AI-driven multimodal triage, trust-scored data fusion, and risk prediction to enable rapid, safe coordination of relief efforts during floods, fires, and other urban disasters.
 
@@ -18,7 +18,7 @@ The system provides:
 
 ---
 
-## 👥 Team
+## Team
 
 | Role | Contributor | Focus |
 |------|-------------|-------|
@@ -28,7 +28,7 @@ The system provides:
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ### System Components
 
@@ -65,10 +65,9 @@ The system provides:
 
 ---
 
-## 🔧 Core Features & Methods
+## Core Features & Methods
 
-### 5.1 Multimodal Triage System
-**Lead**: Vismaya M
+### 1. Multimodal Triage System
 
 Disaster incident classification and severity assessment from diverse input streams:
 - GPS locations & timestamps
@@ -84,8 +83,7 @@ Disaster incident classification and severity assessment from diverse input stre
 
 ---
 
-### 5.2 Trust-Scored Data Fusion
-**Lead**: Yashaswini K M
+### 2. Trust-Scored Data Fusion
 
 Validates and fuses evidence from disparate sources—sensor networks and citizen reports:
 - **Link Establishment**: Geographical proximity, chronological correlation, condition agreement
@@ -94,8 +92,7 @@ Validates and fuses evidence from disparate sources—sensor networks and citize
 
 ---
 
-### 5.3 Next Risk Zone Prediction
-**Lead**: Thrisha R
+### 3. Next Risk Zone Prediction
 
 Dynamic real-time hazard mapping and forecasting:
 - **Data Ingestion**: Rainfall, water level, fire signals from distributed sensor grid
@@ -106,8 +103,7 @@ Dynamic real-time hazard mapping and forecasting:
 
 ---
 
-### 5.4 Micro Task Generation & Allocation
-**Lead**: Yashaswini K M
+### 4. Micro Task Generation & Allocation
 
 Breakdown high-level relief needs into actionable, scoped tasks:
 - **Assignment Methods**:
@@ -117,8 +113,7 @@ Breakdown high-level relief needs into actionable, scoped tasks:
 
 ---
 
-### 5.5 Hazard-Aware Routing & Evacuation
-**Lead**: Vismaya M
+### 5. Hazard-Aware Routing & Evacuation
 
 Intelligent pathfinding for safe, rapid evacuation:
 - **Graph Representation**: Roads model as dynamic graph with edge costs
@@ -128,8 +123,7 @@ Intelligent pathfinding for safe, rapid evacuation:
 
 ---
 
-### 5.6 Digital Twin & Observability
-**Lead**: Vismaya M
+### 6. Digital Twin & Observability
 
 Real-time situational awareness dashboard:
 - **Live Elements**: Volunteer positions, hospitals, shelters, blocked roads, risk heatmaps
@@ -139,7 +133,7 @@ Real-time situational awareness dashboard:
 
 ---
 
-## 🤖 AI & ML Models
+## AI & ML Models
 
 ### Pretrained Vision & Multimodal Models
 
@@ -155,7 +149,7 @@ Real-time situational awareness dashboard:
 
 ---
 
-## 📡 IoT Sensor Network
+## IoT Sensor Network
 
 ### Sensor Types & Normalization
 
@@ -189,7 +183,7 @@ forecasted_risk = DECAY × current_risk + DIFFUSION_COEFF × neighbor_average
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 FlashRescue/
@@ -216,7 +210,7 @@ FlashRescue/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - **Node.js** (v14+) for IoT services
@@ -274,7 +268,7 @@ python data_fusion.py
 
 ---
 
-## 📊 Dashboard Features
+## Dashboard Features
 
 ### Map Visualization
 - **Risk Heatmap**: Real-time probability distribution of hazards
@@ -298,7 +292,7 @@ python data_fusion.py
 
 ---
 
-## 📈 Performance Metrics
+## Performance Metrics
 
 | Metric | Value | Notes |
 |--------|-------|-------|
@@ -311,7 +305,7 @@ python data_fusion.py
 
 ---
 
-## 🔒 Security & Privacy
+## Security & Privacy
 
 - **MQTT Authentication**: Broker-level access control (configurable)
 - **Data Minimization**: Only location, timestamp, and sensor type retained
@@ -321,7 +315,7 @@ python data_fusion.py
 
 ---
 
-## 📝 Configuration
+## Configuration
 
 All services respect environment variables for customization:
 
@@ -348,12 +342,12 @@ export CONFIDENCE_THRESHOLD="0.75"
 
 ---
 
-## 📚 Research & Publication
+## Research & Publication
 
 **Paper**: *"FlashRescue: A Resilient Smart-City Platform and Safe Evacuation Guidance"*
 
 - **Venue**: International Conference on Smart Data Structures and Algorithms (ICSDSA'26)
-- **Status**: ✅ Accepted for **Indian Patent Publication**
+- **Status**: Accepted for **Indian Patent Publication**
 - **Recognition**: Top 5% of high-quality research papers selected for patent filing
 
 **Key Contributions**:
@@ -365,40 +359,12 @@ export CONFIDENCE_THRESHOLD="0.75"
 
 ---
 
-## 📄 License
-
-This project is provided as-is for research and disaster response applications. See `LICENSE` file for details.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/YourFeature`)
-3. Commit changes with clear messages
-4. Submit a pull request with description
-
-For major changes, open an issue first to discuss proposed modifications.
-
----
-
-## 📞 Contact & Support
-
-For questions, issues, or collaboration inquiries:
-- **Thrisha R** (IoT & Risk Prediction)
-- **Vismaya M** (AI & Multimodal Triage)
-- **Yashaswini K M** (Data Fusion & Task Allocation)
-
----
-
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - MQTT.js and Mosquitto communities for robust messaging infrastructure
 - Leaflet.js for interactive mapping
 - OpenAI Whisper for speech recognition
 - PyTorch and HuggingFace for model libraries
-- Assam disaster management agencies for domain expertise and use-case validation
 
 ---
 
