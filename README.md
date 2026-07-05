@@ -1,6 +1,10 @@
 # FlashRescue: A Resilient Smart-City Platform and Safe Evacuation Guidance
 
-> **Award Recognition**: Paper accepted at **ICSDSA'26** under the **Indian Patent Publication Category** — Top 5% of high-quality papers selected for Indian Patent publication.
+> **Recognition**
+>
+> - Research paper presented at **ICSDSA 2026 (International Conference on Secure Data Science and Applications)**, a **SCOPUS-indexed Springer conference**.
+> - Selected under the **Indian Patent Publication Category** following peer review for its innovation and real-world applicability.
+> - **Second Prize** at the **K-GIS 2.0 State-Level Exhibition & Student Innovation Model Competition (KSRSAC, Government of Karnataka)** for the FlashRescue platform.
 
 ---
 
@@ -344,11 +348,12 @@ export CONFIDENCE_THRESHOLD="0.75"
 
 ## Research & Publication
 
-**Paper**: *"FlashRescue: A Resilient Smart-City Platform and Safe Evacuation Guidance"*
+**Paper:** *"FlashRescue: A Resilient Smart-City Platform and Safe Evacuation Guidance"*
 
-- **Venue**: International Conference on Smart Data Structures and Algorithms (ICSDSA'26)
-- **Status**: Accepted for **Indian Patent Publication**
-- **Recognition**: Top 5% of high-quality research papers selected for patent filing
+- **Conference:** International Conference on Secure Data Science and Applications (**ICSDSA 2026**)
+- **Publication:** SCOPUS-indexed Springer Conference Proceedings
+- **Presentation:** Successfully presented virtually on **28 March 2026**
+- **Recognition:** Selected under the **Indian Patent Publication Category** following peer review
 
 **Key Contributions**:
 1. Integrated multimodal disaster triage pipeline
