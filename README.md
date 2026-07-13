@@ -10,7 +10,9 @@
 
 ## Project Overview
 
-**FlashRescue** is an intelligent disaster response and evacuation platform that integrates real-time IoT sensor networks, AI-driven multimodal triage, trust-scored data fusion, and risk prediction to enable rapid, safe coordination of relief efforts during floods, fires, and other urban disasters.
+**FlashRescue** is an AI-powered disaster intelligence platform that integrates IoT sensing, multimodal artificial intelligence, digital twins, trust-aware data fusion, and predictive risk analytics to support rapid emergency response and safe evacuation during floods, fires, earthquakes, and other urban disasters.
+
+The platform continuously collects sensor observations, validates citizen reports, predicts hazard propagation, recommends safe evacuation routes, and coordinates volunteers through a live command dashboard.
 
 The system provides:
 - **Real-time hazard detection** via distributed sensor networks
@@ -31,6 +33,23 @@ The system provides:
 | **AI & Data Fusion** | **Yashaswini K M** | Trust scoring, data fusion, micro-task generation, volunteer allocation |
 
 ---
+
+## Technology Stack
+
+| Category        | Technologies                                                                  |
+| --------------- | ----------------------------------------------------------------------------- |
+| Languages       | Python, JavaScript, HTML, CSS                                                 |
+| AI / ML         | PyTorch, TorchVision, HuggingFace Transformers, OpenCV, Whisper, Scikit-learn |
+| Computer Vision | Vision Transformer (ViT), ResNet-50, Fire & Smoke Detection CNN               |
+| NLP             | Whisper ASR, Disaster Text Classification                                     |
+| IoT             | MQTT, Mosquitto                                                               |
+| Mapping         | Leaflet.js                                                                    |
+| Algorithms      | A* Pathfinding, Grid Diffusion, Temporal Smoothing, Trust Scoring             |
+| Backend         | Node.js                                                                       |
+| Notifications   | Twilio SMS & Voice                                                            |
+| Architecture    | Digital Twin, Event-driven Microservices                                      |
+
+----
 
 ## Architecture
 
@@ -66,6 +85,37 @@ The system provides:
 │  └─────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+## System Workflow
+
+IoT Sensors
+        │
+Citizen Reports
+        │
+        ▼
+ MQTT Event Broker
+        │
+        ▼
+Multimodal AI
+(ViT + ResNet + Whisper)
+        │
+        ▼
+Trust Scoring &
+Evidence Fusion
+        │
+        ▼
+Risk Prediction
+(Grid Diffusion)
+        │
+        ▼
+Hazard-aware
+A* Routing
+        │
+        ▼
+Digital Twin Dashboard
+        │
+        ▼
+Volunteer Coordination
 
 ---
 
@@ -186,6 +236,19 @@ forecasted_risk = DECAY × current_risk + DIFFUSION_COEFF × neighbor_average
 | `ROUTE_RISK_WEIGHT` | 9.0 | A* cost weight for hazard avoidance |
 
 ---
+
+## Core Innovations
+
+- Multimodal disaster intelligence pipeline
+- Trust-aware sensor–citizen data fusion
+- Grid-based hazard propagation modelling
+- Digital Twin–enabled emergency visualization
+- Risk-aware evacuation routing using A*
+- Dynamic volunteer task orchestration
+- Real-time IoT event streaming
+
+---
+<img width="1536" height="1024" alt="ChatGPT Image Jul 13, 2026, 09_41_22 PM" src="https://github.com/user-attachments/assets/ea674326-5432-4e7b-8000-40b6d0f518f1" />
 
 ## Project Structure
 
@@ -374,3 +437,4 @@ export CONFIDENCE_THRESHOLD="0.75"
 ---
 
 **FlashRescue** — *Empowering rapid, coordinated disaster response with trust-scored intelligence.*
+<img width="1536" height="1024" alt="ChatGPT Image Jul 13, 2026, 09_41_22 PM" src="https://github.com/user-attachments/assets/26b5d51f-9949-49d0-80b8-13493578d18c" />
