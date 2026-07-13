@@ -1,5 +1,7 @@
 # FlashRescue: A Resilient Smart-City Platform and Safe Evacuation Guidance
 
+<img width="1536" height="1024" alt="ChatGPT Image Jul 13, 2026, 09_41_22 PM" src="https://github.com/user-attachments/assets/26b5d51f-9949-49d0-80b8-13493578d18c" />
+
 > **Recognition**
 >
 > - Research paper presented at **ICSDSA 2026 (International Conference on Secure Data Science and Applications)**, a **SCOPUS-indexed Springer conference**.
@@ -248,7 +250,6 @@ forecasted_risk = DECAY × current_risk + DIFFUSION_COEFF × neighbor_average
 - Real-time IoT event streaming
 
 ---
-<img width="1536" height="1024" alt="ChatGPT Image Jul 13, 2026, 09_41_22 PM" src="https://github.com/user-attachments/assets/ea674326-5432-4e7b-8000-40b6d0f518f1" />
 
 ## Project Structure
 
@@ -437,4 +438,3 @@ export CONFIDENCE_THRESHOLD="0.75"
 ---
 
 **FlashRescue** — *Empowering rapid, coordinated disaster response with trust-scored intelligence.*
-<img width="1536" height="1024" alt="ChatGPT Image Jul 13, 2026, 09_41_22 PM" src="https://github.com/user-attachments/assets/26b5d51f-9949-49d0-80b8-13493578d18c" />
