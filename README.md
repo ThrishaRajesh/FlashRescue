@@ -196,10 +196,10 @@ Real-time situational awareness dashboard:
 | Model | Purpose | Architecture | Input | Output |
 |-------|---------|--------------|-------|--------|
 | **Vision Transformer (ViT)** | Scene interpretation (debris, flooding, structural damage) | Transformer-based vision model | RGB images | Scene understanding logits |
-| **Fire & Smoke Detector** | High-priority fire identification | Specialized CNN | RGB images | Fire/smoke confidence scores |
-| **ResNet-50** | Prediction stabilization & ensemble robustness | Deep residual CNN | RGB images | Classification logits |
+| **Fire & Smoke Detector** | High-priority fire identification | Pretrained fire-detection model from Hugging Face | RGB images | Fire/smoke confidence scores |
+| **ResNet-50** | Additional image classifier used for label-based disaster cues | Deep residual CNN | RGB images | Classification logits |
 | **Whisper ASR** | Speech-to-text transcription from audio reports | Automatic Speech Recognition | Audio waveforms | Transcribed text |
-| **Text Classifier** | Disaster cue extraction from transcripts | Lightweight NLP classifier | Text | Disaster type & cues |
+| **Text Classifier** | Disaster cue extraction from transcripts | Rule-based keyword scorer for disaster-related terms in English and Hindi | Text | Disaster type & cues |
 
 **Fusion Strategy**: Image confidence + transcript signals → Final triage judgment (disaster type, risk level, confidence score)
 
