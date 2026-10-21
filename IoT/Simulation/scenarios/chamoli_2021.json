@@ -1,0 +1,126 @@
+{
+  "name": "chamoli_2021",
+  "title": "Chamoli rock-ice avalanche and debris flood (Uttarakhand, 7 Feb 2021)",
+  "description": "A rock-ice avalanche in the Ronti Gad catchment generated a debris flood down the Rishiganga and Dhauliganga in February, with NO rainfall trigger whatsoever. This is the scenario that proves the system does not require rain to raise risk — a rainfall-driven model alone would have seen nothing coming.",
+  "region": {
+    "center": { "lat": 30.45, "lon": 79.65 },
+    "latSpan": 0.3,
+    "lonSpan": 0.3,
+    "climateZone": "hills"
+  },
+  "startTime": "2021-02-07T04:00:00Z",
+  "seed": 20210207,
+  "timeScale": 20,
+  "durationHours": 6,
+  "gridHint": {
+    "note": "Point risk_predictor.cjs at the Rishiganga/Dhauliganga confluence",
+    "CENTER_LAT": "30.45",
+    "CENTER_LON": "79.65",
+    "LAT_SPAN": "0.3",
+    "LON_SPAN": "0.3"
+  },
+  "riverStations": [
+    {
+      "id": "rishiganga",
+      "name": "Rishiganga (Raini)",
+      "lat": 30.4500,
+      "lon": 79.7000,
+      "catchmentAreaKm2": 240,
+      "runoffCoefficient": 0.4,
+      "bedLevelM": 1850.0,
+      "dangerLevelM": 1856.0,
+      "hflM": 1858.0,
+      "baseflowCumecs": 25,
+      "ratingA": 18,
+      "ratingB": 1.8,
+      "kMinutes": 25
+    },
+    {
+      "id": "tapovan",
+      "name": "Dhauliganga (Tapovan barrage)",
+      "lat": 30.4900,
+      "lon": 79.6200,
+      "catchmentAreaKm2": 1100,
+      "runoffCoefficient": 0.4,
+      "bedLevelM": 1780.0,
+      "dangerLevelM": 1786.0,
+      "hflM": 1788.0,
+      "baseflowCumecs": 60,
+      "ratingA": 32,
+      "ratingB": 1.8,
+      "kMinutes": 40
+    },
+    {
+      "id": "joshimath-ds",
+      "name": "Dhauliganga downstream of Joshimath",
+      "lat": 30.5300,
+      "lon": 79.5700,
+      "catchmentAreaKm2": 1600,
+      "runoffCoefficient": 0.4,
+      "bedLevelM": 1400.0,
+      "dangerLevelM": 1406.0,
+      "hflM": 1408.0,
+      "baseflowCumecs": 90,
+      "ratingA": 40,
+      "ratingB": 1.8,
+      "kMinutes": 55
+    }
+  ],
+  "slopeUnits": [
+    {
+      "id": "slope-ronti",
+      "lat": 30.3800,
+      "lon": 79.7300,
+      "region": "NW_HIMALAYA",
+      "slopeDeg": 38,
+      "initialApiMm": 4,
+      "creepDegPerHour": 0.002
+    }
+  ],
+  "urbanCells": [],
+  "nodeGroups": [
+    { "id": "wl", "role": "river_gauge", "perStation": true, "kinds": ["water", "rain"] },
+    {
+      "id": "seis",
+      "role": "seismic_station",
+      "count": 4,
+      "kinds": ["tremor"],
+      "solarPowered": false
+    },
+    { "id": "slope", "role": "slope_monitor", "perSlope": true, "kinds": ["soil", "tilt", "rain"] },
+    { "id": "rain", "role": "rain_gauge", "count": 6, "kinds": ["rain", "temp", "humidity", "pressure"] },
+    { "id": "sos", "role": "panic_button", "count": 4, "kinds": ["sos"] }
+  ],
+  "events": [
+    {
+      "atHours": 1.0,
+      "type": "earthquake",
+      "params": { "lat": 30.3800, "lon": 79.7300, "magnitude": 4.3, "depthKm": 2 },
+      "note": "Rock-ice detachment registers seismically — the only precursor available, with zero rainfall signal"
+    },
+    {
+      "atHours": 1.12,
+      "type": "surge",
+      "params": { "stationId": "rishiganga", "cumecs": 2600 },
+      "note": "Debris flood hits Rishiganga minutes later — rise time is minutes, not hours"
+    },
+    {
+      "atHours": 1.3,
+      "type": "surge",
+      "params": { "stationId": "tapovan", "cumecs": 3100 },
+      "note": "Tapovan barrage overwhelmed"
+    },
+    {
+      "atHours": 1.6,
+      "type": "surge",
+      "params": { "stationId": "joshimath-ds", "cumecs": 2400 },
+      "note": "Wave propagates downstream, attenuating"
+    },
+    {
+      "atHours": 1.35,
+      "type": "sos",
+      "params": { "nodeId": "sos-1" },
+      "note": "Panic button at the barrage worksite"
+    }
+  ]
+}

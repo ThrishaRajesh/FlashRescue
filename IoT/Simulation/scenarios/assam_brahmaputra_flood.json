@@ -1,0 +1,303 @@
+{
+  "name": "assam_brahmaputra_flood",
+  "title": "Assam Brahmaputra basin flood (annual Jun-Jul pattern)",
+  "description": "Multi-day basin-wide monsoon rainfall driving a slow stage rise on the main stem over 48-72h, crossing CWC Warning then Danger level, with an embankment breach amplifying the tributary. The defining feature is lag: the river keeps rising for many hours after the rain eases.",
+  "region": {
+    "center": {
+      "lat": 26.2006,
+      "lon": 92.9376
+    },
+    "latSpan": 0.12,
+    "lonSpan": 0.12,
+    "climateZone": "plains"
+  },
+  "startTime": "2026-07-14T00:00:00Z",
+  "seed": 20260714,
+  "timeScale": 300,
+  "durationHours": 96,
+  "riverStations": [
+    {
+      "id": "bp-main",
+      "name": "Brahmaputra main stem (Kaliabor reach)",
+      "lat": 26.23,
+      "lon": 92.91,
+      "isMainStem": true,
+      "catchmentAreaKm2": 20000,
+      "runoffCoefficient": 0.55,
+      "bedLevelM": 72,
+      "dangerLevelM": 78,
+      "hflM": 79.6,
+      "baseflowCumecs": 12000,
+      "ratingA": 1000,
+      "ratingB": 1.9,
+      "kMinutes": 960
+    },
+    {
+      "id": "trib-kopili",
+      "name": "Kopili tributary confluence",
+      "lat": 26.165,
+      "lon": 92.97,
+      "catchmentAreaKm2": 1200,
+      "runoffCoefficient": 0.55,
+      "bedLevelM": 74,
+      "dangerLevelM": 79,
+      "hflM": 80.2,
+      "baseflowCumecs": 260,
+      "ratingA": 60,
+      "ratingB": 1.9,
+      "kMinutes": 90
+    }
+  ],
+  "slopeUnits": [
+    {
+      "id": "slope-north",
+      "lat": 26.252,
+      "lon": 92.96,
+      "region": "NE_HIMALAYA",
+      "slopeDeg": 31,
+      "initialApiMm": 110
+    },
+    {
+      "id": "slope-east",
+      "lat": 26.19,
+      "lon": 92.99,
+      "region": "NE_HIMALAYA",
+      "slopeDeg": 26,
+      "initialApiMm": 95
+    }
+  ],
+  "urbanCells": [
+    {
+      "id": "urban-nagaon",
+      "lat": 26.175,
+      "lon": 92.92,
+      "capacityMmHr": 22,
+      "cloggingFactor": 0.35
+    }
+  ],
+  "nodeGroups": [
+    {
+      "id": "rain",
+      "role": "rain_gauge",
+      "count": 20,
+      "kinds": [
+        "rain",
+        "temp",
+        "humidity",
+        "pressure"
+      ]
+    },
+    {
+      "id": "wl",
+      "role": "river_gauge",
+      "perStation": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "slope",
+      "role": "slope_monitor",
+      "perSlope": true,
+      "kinds": [
+        "soil",
+        "tilt",
+        "rain"
+      ]
+    },
+    {
+      "id": "urb",
+      "role": "urban_waterlogging",
+      "perUrban": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "seis",
+      "role": "seismic_station",
+      "count": 3,
+      "kinds": [
+        "tremor"
+      ],
+      "solarPowered": false
+    },
+    {
+      "id": "sos",
+      "role": "panic_button",
+      "count": 8,
+      "kinds": [
+        "sos"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "atHours": 2,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "bp-main",
+        "mmHr": 4
+      },
+      "note": "Basin-wide monsoon surge begins over the upper catchment"
+    },
+    {
+      "atHours": 2,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "trib-kopili",
+        "mmHr": 5
+      },
+      "note": "Tributary basin responds faster and harder than the main stem"
+    },
+    {
+      "atHours": 2,
+      "type": "extreme_rain",
+      "params": {
+        "on": true
+      },
+      "note": "Local storm regime becomes active"
+    },
+    {
+      "atHours": 3,
+      "type": "storm",
+      "params": {
+        "lat": 26.16,
+        "lon": 92.89,
+        "peakIntensity": 34,
+        "radiusKm": 7,
+        "lifetimeSec": 14400,
+        "speedKmh": 3,
+        "stationary": true
+      },
+      "note": "Quasi-stationary cell parks over the Nagaon side of the box — local gauges record very heavy rain"
+    },
+    {
+      "atHours": 8,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "bp-main",
+        "mmHr": 8
+      },
+      "note": "Basin rainfall intensifies"
+    },
+    {
+      "atHours": 8,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "trib-kopili",
+        "mmHr": 10
+      },
+      "note": "Tributary basin responds faster and harder than the main stem"
+    },
+    {
+      "atHours": 16,
+      "type": "storm",
+      "params": {
+        "lat": 26.15,
+        "lon": 92.88,
+        "peakIntensity": 42,
+        "radiusKm": 8,
+        "lifetimeSec": 14400,
+        "speedKmh": 2.5,
+        "stationary": true
+      },
+      "note": "Second, heavier cell on an already-saturated catchment"
+    },
+    {
+      "atHours": 18,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "bp-main",
+        "mmHr": 11
+      },
+      "note": "Peak basin-average rainfall (~11 mm/h sustained is a major Assam-2004-class surge)"
+    },
+    {
+      "atHours": 18,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "trib-kopili",
+        "mmHr": 14
+      },
+      "note": "Tributary basin responds faster and harder than the main stem"
+    },
+    {
+      "atHours": 31,
+      "type": "storm",
+      "params": {
+        "lat": 26.155,
+        "lon": 92.9,
+        "peakIntensity": 50,
+        "radiusKm": 8,
+        "lifetimeSec": 14400,
+        "speedKmh": 2,
+        "stationary": true
+      },
+      "note": "Peak local rainfall — expect the IMD very heavy band on 24h accumulation"
+    },
+    {
+      "atHours": 34,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "bp-main",
+        "mmHr": 7
+      },
+      "note": "Basin rainfall easing"
+    },
+    {
+      "atHours": 34,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "trib-kopili",
+        "mmHr": 9
+      },
+      "note": "Tributary basin responds faster and harder than the main stem"
+    },
+    {
+      "atHours": 44,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "bp-main",
+        "mmHr": 1
+      },
+      "note": "Basin rainfall effectively over — note the river keeps rising for another day because of catchment lag"
+    },
+    {
+      "atHours": 44,
+      "type": "basin_rain",
+      "params": {
+        "stationId": "trib-kopili",
+        "mmHr": 1
+      },
+      "note": "Tributary basin responds faster and harder than the main stem"
+    },
+    {
+      "atHours": 44,
+      "type": "extreme_rain",
+      "params": {
+        "on": false
+      },
+      "note": "Local storms clear"
+    },
+    {
+      "atHours": 52,
+      "type": "dam_release",
+      "params": {
+        "stationId": "trib-kopili",
+        "cumecs": 1400
+      },
+      "note": "Embankment breach pushes the tributary past its danger level"
+    },
+    {
+      "atHours": 58,
+      "type": "sos",
+      "params": {
+        "nodeId": "sos-3"
+      },
+      "note": "Citizen panic button in the inundated zone"
+    }
+  ]
+}

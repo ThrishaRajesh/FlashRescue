@@ -1,0 +1,218 @@
+{
+  "name": "chennai_urban_2015",
+  "title": "Chennai urban flood (Nov-Dec 2015 pattern)",
+  "description": "Extreme NE-monsoon rainfall over a city whose drainage is both undersized and partially clogged, compounded by tide lock: at high tide the storm drains cannot discharge to sea at all, so water ponds even as rainfall eases. Ponding rises with essentially no river signal, which is why a river-gauge-only flood model fails completely in urban settings.",
+  "region": {
+    "center": {
+      "lat": 13.06,
+      "lon": 80.22
+    },
+    "latSpan": 0.45,
+    "lonSpan": 0.4,
+    "climateZone": "coastal"
+  },
+  "startTime": "2015-12-01T00:00:00Z",
+  "seed": 20151201,
+  "timeScale": 180,
+  "durationHours": 48,
+  "gridHint": {
+    "note": "Point risk_predictor.cjs at the Chennai metro area",
+    "CENTER_LAT": "13.06",
+    "CENTER_LON": "80.22",
+    "LAT_SPAN": "0.45",
+    "LON_SPAN": "0.40"
+  },
+  "riverStations": [
+    {
+      "id": "adyar",
+      "name": "Adyar river (Saidapet)",
+      "lat": 13.022,
+      "lon": 80.224,
+      "tidal": true,
+      "catchmentAreaKm2": 860,
+      "runoffCoefficient": 0.65,
+      "bedLevelM": 1,
+      "dangerLevelM": 6,
+      "hflM": 7.2,
+      "baseflowCumecs": 20,
+      "ratingA": 42,
+      "ratingB": 1.8,
+      "kMinutes": 60,
+      "floodplainWidthRatio": 25
+    },
+    {
+      "id": "cooum",
+      "name": "Cooum river (Chetpet)",
+      "lat": 13.073,
+      "lon": 80.243,
+      "tidal": true,
+      "catchmentAreaKm2": 320,
+      "runoffCoefficient": 0.7,
+      "bedLevelM": 0.8,
+      "dangerLevelM": 4.5,
+      "hflM": 5.6,
+      "baseflowCumecs": 8,
+      "ratingA": 24,
+      "ratingB": 1.8,
+      "kMinutes": 45,
+      "floodplainWidthRatio": 25
+    }
+  ],
+  "slopeUnits": [],
+  "urbanCells": [
+    {
+      "id": "urban-velachery",
+      "lat": 12.979,
+      "lon": 80.221,
+      "capacityMmHr": 20,
+      "cloggingFactor": 0.45,
+      "tidal": true
+    },
+    {
+      "id": "urban-mudichur",
+      "lat": 12.908,
+      "lon": 80.068,
+      "capacityMmHr": 18,
+      "cloggingFactor": 0.4,
+      "tidal": true
+    },
+    {
+      "id": "urban-tnagar",
+      "lat": 13.04,
+      "lon": 80.233,
+      "capacityMmHr": 25,
+      "cloggingFactor": 0.3,
+      "tidal": true
+    },
+    {
+      "id": "urban-ennore",
+      "lat": 13.214,
+      "lon": 80.324,
+      "capacityMmHr": 22,
+      "cloggingFactor": 0.5,
+      "tidal": true
+    }
+  ],
+  "nodeGroups": [
+    {
+      "id": "wl",
+      "role": "river_gauge",
+      "perStation": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "urb",
+      "role": "urban_waterlogging",
+      "perUrban": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "rain",
+      "role": "rain_gauge",
+      "count": 16,
+      "kinds": [
+        "rain",
+        "temp",
+        "humidity",
+        "pressure"
+      ]
+    },
+    {
+      "id": "aq",
+      "role": "air_quality",
+      "count": 4,
+      "kinds": [
+        "co",
+        "pm25",
+        "temp",
+        "humidity",
+        "wind"
+      ]
+    },
+    {
+      "id": "sos",
+      "role": "panic_button",
+      "count": 10,
+      "kinds": [
+        "sos"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "atHours": 1,
+      "type": "extreme_rain",
+      "params": {
+        "on": true
+      },
+      "note": "Extreme NE monsoon rainfall regime engaged"
+    },
+    {
+      "atHours": 2,
+      "type": "storm",
+      "params": {
+        "lat": 13.02,
+        "lon": 80.21,
+        "peakIntensity": 45,
+        "radiusKm": 11,
+        "lifetimeSec": 28800,
+        "speedKmh": 1.5,
+        "stationary": true
+      },
+      "note": "Quasi-stationary system parks over the city — persistence, not peak intensity, is what produced the 2015 accumulations"
+    },
+    {
+      "atHours": 12,
+      "type": "storm",
+      "params": {
+        "lat": 13.08,
+        "lon": 80.24,
+        "peakIntensity": 60,
+        "radiusKm": 12,
+        "lifetimeSec": 32400,
+        "speedKmh": 1,
+        "stationary": true
+      },
+      "note": "Second, more intense stationary system over the northern city — expect the IMD extremely heavy band"
+    },
+    {
+      "atHours": 14,
+      "type": "sos",
+      "params": {
+        "nodeId": "sos-5"
+      },
+      "note": "Citizen SOS from a waterlogged neighbourhood"
+    },
+    {
+      "atHours": 20,
+      "type": "dam_release",
+      "params": {
+        "stationId": "adyar",
+        "cumecs": 850
+      },
+      "note": "Chembarambakkam reservoir release (~29,000 cusecs, matching the real event) — the human decision that turned heavy rain into a catastrophe"
+    },
+    {
+      "atHours": 22,
+      "type": "sos",
+      "params": {
+        "nodeId": "sos-8"
+      },
+      "note": "Second SOS after the reservoir release"
+    },
+    {
+      "atHours": 26,
+      "type": "extreme_rain",
+      "params": {
+        "on": false
+      },
+      "note": "Rain eases, but ponding persists because tide lock prevents drainage"
+    }
+  ]
+}

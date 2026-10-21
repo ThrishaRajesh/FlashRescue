@@ -1,1 +1,79 @@
+FlashRescue — IoT layer
+=======================
 
+The real-time sensing, risk-prediction and alerting tier. All services are
+decoupled microservices that communicate only over MQTT.
+
+Layout
+------
+  Simulation/              Physics-based sensor world (see Simulation/README.md)
+  Publishers/
+    sensor_sim.cjs         Sensor network driven by the physics simulation
+    volunteer_sim.cjs      Volunteer GPS and velocity vectors
+  Subscribers/
+    risk_predictor.cjs     Risk grid, diffusion forecast, zone detection, A* routing
+    alert_service.cjs      Alert generation, rate limiting, notification dispatch
+  Visualization Dashboard/
+    dashboard.html         Leaflet map: heatmap, volunteers, zones, routes
+    crowd_validation.html  Standalone trust-scoring demo (not wired to MQTT)
+
+Prerequisites
+-------------
+  Node.js 14+            (developed against Node 20)
+  An MQTT broker         e.g. Mosquitto on localhost:1883
+  A WebSocket bridge     on localhost:9001, for the browser dashboard
+                         (browsers cannot speak raw MQTT over TCP)
+
+  npm install            installs mqtt (and twilio, pending replacement)
+
+Running
+-------
+  Terminal 1   mosquitto -c /path/to/mosquitto.conf
+  Terminal 2   node Publishers/sensor_sim.cjs --scenario normal_monsoon
+  Terminal 3   node Publishers/volunteer_sim.cjs
+  Terminal 4   node Subscribers/risk_predictor.cjs
+  Terminal 5   node Subscribers/alert_service.cjs
+  Browser      open "Visualization Dashboard/dashboard.html"
+
+To inspect the simulation without a broker:
+
+  node Publishers/sensor_sim.cjs --list
+  node Publishers/sensor_sim.cjs --scenario sikkim_glof_2023 --headless
+
+Scenarios outside the default Assam grid print the CENTER_LAT / LAT_SPAN
+environment variables that risk_predictor.cjs needs so the risk grid covers the
+sensors. For example:
+
+  CENTER_LAT=27.7 CENTER_LON=88.45 LAT_SPAN=1.0 LON_SPAN=0.7 \
+    node Subscribers/risk_predictor.cjs
+
+Topics
+------
+  sensors/{node}/{kind}    risk-bearing readings (carry valueNorm)
+  telemetry/{node}/{kind}  context readings (no risk weight)
+  nodes/{node}/health      battery, drift, stuck sensors
+  nodes/{node}/status      retained online/offline for dead-node detection
+  events/seismic           earthquake records with early-warning lead times
+  risk/grid                current risk grid
+  risk/forecast            diffusion forecast steps
+  risk/zone                detected high-risk zone polygons
+  viz/vol_flow             aggregated volunteer flow vectors
+  routes/request           evacuation route requests
+  routes/{id}              computed routes
+  alerts/{zoneId}          emitted alerts
+  sim/world                simulation ground truth
+  sim/events               scenario timeline narration
+  sim/stats                node and transport statistics
+
+Known gaps
+----------
+  - alert_service.cjs still depends on Twilio (paid). Replacement with
+    self-hosted ntfy, Telegram, Web Push, CAP 1.2 emission and a LoRa mesh
+    fallback tier is planned.
+  - risk_predictor.cjs republishes the full 1600-cell grid as JSON every second.
+    A binary quantised payload with a static geometry header is planned.
+  - risk_predictor.cjs uses a single risk threshold and convex hulls; graded
+    severity, concave hulls and a slow-trend channel for slow-onset hazards
+    (Joshimath-style subsidence) are planned.
+  - crowd_validation.html generates random mock reports and is not connected to
+    the live sensor feed or the trust-fusion logic.

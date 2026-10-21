@@ -1,0 +1,100 @@
+{
+  "name": "uttarakhand_forest_fire",
+  "title": "Pre-monsoon forest fire under heat wave conditions (Uttarakhand/Kumaon pattern)",
+  "description": "Dry pre-monsoon conditions plus an IMD-criteria heat wave drive fine fuel moisture down until chir pine litter ignites readily. The distinguishing behaviour is directional smoke detection: the plume is advected downwind, so CO and PM2.5 sensors downwind alarm first while upwind sensors a similar distance away see almost nothing. Plume direction therefore locates the fire, not just its presence.",
+  "region": {
+    "center": { "lat": 29.58, "lon": 79.65 },
+    "latSpan": 0.25,
+    "lonSpan": 0.25,
+    "climateZone": "hills"
+  },
+  "startTime": "2026-05-18T00:00:00Z",
+  "seed": 20260518,
+  "timeScale": 90,
+  "durationHours": 30,
+  "gridHint": {
+    "note": "Point risk_predictor.cjs at the Kumaon hills",
+    "CENTER_LAT": "29.58",
+    "CENTER_LON": "79.65",
+    "LAT_SPAN": "0.25",
+    "LON_SPAN": "0.25"
+  },
+  "riverStations": [
+    {
+      "id": "kosi",
+      "name": "Kosi river (Kumaon)",
+      "lat": 29.5300,
+      "lon": 79.6100,
+      "catchmentAreaKm2": 650,
+      "runoffCoefficient": 0.3,
+      "bedLevelM": 900.0,
+      "dangerLevelM": 905.0,
+      "hflM": 906.5,
+      "baseflowCumecs": 18,
+      "ratingA": 16,
+      "ratingB": 1.8,
+      "kMinutes": 45
+    }
+  ],
+  "slopeUnits": [
+    {
+      "id": "slope-ridge",
+      "lat": 29.6100,
+      "lon": 79.6800,
+      "region": "NW_HIMALAYA",
+      "slopeDeg": 29,
+      "initialApiMm": 3
+    }
+  ],
+  "urbanCells": [],
+  "nodeGroups": [
+    {
+      "id": "aq",
+      "role": "air_quality",
+      "count": 14,
+      "kinds": ["co", "pm25", "temp", "humidity", "wind"]
+    },
+    { "id": "rain", "role": "rain_gauge", "count": 8, "kinds": ["rain", "temp", "humidity", "pressure"] },
+    { "id": "wl", "role": "river_gauge", "perStation": true, "kinds": ["water", "rain"] },
+    { "id": "slope", "role": "slope_monitor", "perSlope": true, "kinds": ["soil", "tilt", "rain"] },
+    { "id": "sos", "role": "panic_button", "count": 6, "kinds": ["sos"] }
+  ],
+  "events": [
+    {
+      "atHours": 0.5,
+      "type": "heat_wave",
+      "params": { "deltaC": 5.5 },
+      "note": "Heat wave forcing: +5.5C departure crosses the IMD heat wave criterion and drives fuel moisture down"
+    },
+    {
+      "atHours": 6,
+      "type": "fire",
+      "params": { "id": "fire-ridge", "lat": 29.6000, "lon": 79.6400, "initialRadiusM": 30, "slopeDeg": 24 },
+      "note": "Ignition on a south-facing slope. Spread follows a Rothermel-style wind and slope multiplier"
+    },
+    {
+      "atHours": 11,
+      "type": "fire",
+      "params": { "id": "fire-valley", "lat": 29.5500, "lon": 79.7000, "initialRadiusM": 20, "slopeDeg": 18 },
+      "note": "Second ignition — spotting / separate human-caused start"
+    },
+    {
+      "atHours": 13,
+      "type": "sos",
+      "params": { "nodeId": "sos-2" },
+      "note": "Village SOS as fire approaches"
+    },
+    {
+      "atHours": 22,
+      "type": "storm",
+      "params": { "lat": 29.5200, "lon": 79.5800, "peakIntensity": 28, "radiusKm": 6, "lifetimeSec": 7200 },
+      "note": "Pre-monsoon thunderstorm wets fuels and suppresses the fires — recovery leg of the scenario"
+    },
+    {
+      "atHours": 24,
+      "type": "heat_wave",
+      "params": { "deltaC": 0 },
+      "note": "Heat wave breaks"
+    }
+  ]
+}

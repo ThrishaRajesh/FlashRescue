@@ -1,0 +1,102 @@
+{
+  "name": "joshimath_subsidence",
+  "title": "Joshimath slow-onset ground subsidence (Uttarakhand, 2023 pattern)",
+  "description": "A deliberately awkward scenario: nothing sudden ever happens. Ground subsidence develops over weeks through slow creep on inclinometers and crack meters, with no rainfall trigger and no seismic signal. Exponential smoothing on a fast risk grid will average this away entirely, which is exactly the point — slow-onset hazards need a separate slow-trend detection channel rather than a short-memory filter.",
+  "region": {
+    "center": { "lat": 30.55, "lon": 79.56 },
+    "latSpan": 0.1,
+    "lonSpan": 0.1,
+    "climateZone": "hills"
+  },
+  "startTime": "2022-12-15T00:00:00Z",
+  "seed": 20221215,
+  "timeScale": 3600,
+  "durationHours": 720,
+  "gridHint": {
+    "note": "Point risk_predictor.cjs at Joshimath town",
+    "CENTER_LAT": "30.55",
+    "CENTER_LON": "79.56",
+    "LAT_SPAN": "0.1",
+    "LON_SPAN": "0.1"
+  },
+  "riverStations": [
+    {
+      "id": "alaknanda",
+      "name": "Alaknanda at Joshimath",
+      "lat": 30.5250,
+      "lon": 79.5800,
+      "catchmentAreaKm2": 1400,
+      "runoffCoefficient": 0.35,
+      "bedLevelM": 1340.0,
+      "dangerLevelM": 1346.0,
+      "hflM": 1347.5,
+      "baseflowCumecs": 70,
+      "ratingA": 36,
+      "ratingB": 1.8,
+      "kMinutes": 60
+    }
+  ],
+  "slopeUnits": [
+    {
+      "id": "slope-sunil",
+      "lat": 30.5600,
+      "lon": 79.5620,
+      "region": "NW_HIMALAYA",
+      "slopeDeg": 27,
+      "initialApiMm": 12,
+      "creepDegPerHour": 0.0006
+    },
+    {
+      "id": "slope-marwari",
+      "lat": 30.5430,
+      "lon": 79.5700,
+      "region": "NW_HIMALAYA",
+      "slopeDeg": 31,
+      "initialApiMm": 10,
+      "creepDegPerHour": 0.0009
+    },
+    {
+      "id": "slope-singdhar",
+      "lat": 30.5520,
+      "lon": 79.5550,
+      "region": "NW_HIMALAYA",
+      "slopeDeg": 24,
+      "initialApiMm": 14,
+      "creepDegPerHour": 0.0004
+    }
+  ],
+  "urbanCells": [],
+  "nodeGroups": [
+    {
+      "id": "slope",
+      "role": "slope_monitor",
+      "perSlope": true,
+      "kinds": ["tilt", "soil", "rain"],
+      "sampleIntervalOverrides": { "tilt": 1800 }
+    },
+    { "id": "wl", "role": "river_gauge", "perStation": true, "kinds": ["water", "rain"] },
+    { "id": "rain", "role": "rain_gauge", "count": 6, "kinds": ["rain", "temp", "humidity", "pressure"] },
+    {
+      "id": "seis",
+      "role": "seismic_station",
+      "count": 2,
+      "kinds": ["tremor"],
+      "solarPowered": false
+    },
+    { "id": "sos", "role": "panic_button", "count": 4, "kinds": ["sos"] }
+  ],
+  "events": [
+    {
+      "atHours": 240,
+      "type": "sos",
+      "params": { "nodeId": "sos-1" },
+      "note": "Residents report widening cracks — the human signal arrives long before any threshold-based sensor alarm"
+    },
+    {
+      "atHours": 480,
+      "type": "sos",
+      "params": { "nodeId": "sos-3" },
+      "note": "Further reports as subsidence accelerates"
+    }
+  ]
+}

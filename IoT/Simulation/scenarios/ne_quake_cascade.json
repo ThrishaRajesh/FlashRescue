@@ -1,0 +1,209 @@
+{
+  "name": "ne_quake_cascade",
+  "title": "Multi-hazard cascade: earthquake to landslide dam to outburst flood (NE India, Zone V)",
+  "description": "The flagship cascade scenario. A major earthquake in seismic Zone V triggers co-seismic landslides, one of which dams a tributary. The counter-intuitive signature is critical: the DOWNSTREAM gauge FALLS while water impounds behind the blockage, then the dam breaches hours later and releases a destructive outburst flood. A system that only watches for rising water would read the falling gauge as improvement, moments before the worst happens.",
+  "region": {
+    "center": {
+      "lat": 26.2006,
+      "lon": 92.9376
+    },
+    "latSpan": 0.12,
+    "lonSpan": 0.12,
+    "climateZone": "plains"
+  },
+  "startTime": "2026-08-02T10:00:00Z",
+  "seed": 20260802,
+  "timeScale": 120,
+  "durationHours": 24,
+  "riverStations": [
+    {
+      "id": "bp-main",
+      "name": "Brahmaputra main stem (Kaliabor reach)",
+      "lat": 26.23,
+      "lon": 92.91,
+      "isMainStem": true,
+      "catchmentAreaKm2": 20000,
+      "runoffCoefficient": 0.38,
+      "bedLevelM": 72,
+      "dangerLevelM": 78,
+      "hflM": 79.6,
+      "baseflowCumecs": 9500,
+      "ratingA": 1000,
+      "ratingB": 1.9,
+      "kMinutes": 960
+    },
+    {
+      "id": "trib-upper",
+      "name": "Tributary above landslide site",
+      "lat": 26.248,
+      "lon": 92.965,
+      "catchmentAreaKm2": 700,
+      "runoffCoefficient": 0.4,
+      "bedLevelM": 78,
+      "dangerLevelM": 83,
+      "hflM": 84.5,
+      "baseflowCumecs": 110,
+      "ratingA": 45,
+      "ratingB": 1.9,
+      "kMinutes": 70,
+      "impoundmentAreaM2": 800000
+    },
+    {
+      "id": "trib-lower",
+      "name": "Tributary below landslide site",
+      "lat": 26.215,
+      "lon": 92.978,
+      "catchmentAreaKm2": 900,
+      "runoffCoefficient": 0.4,
+      "bedLevelM": 75,
+      "dangerLevelM": 80,
+      "hflM": 81.5,
+      "baseflowCumecs": 140,
+      "ratingA": 52,
+      "ratingB": 1.9,
+      "kMinutes": 80
+    }
+  ],
+  "slopeUnits": [
+    {
+      "id": "slope-gorge",
+      "lat": 26.232,
+      "lon": 92.97,
+      "region": "NE_HIMALAYA",
+      "slopeDeg": 36,
+      "initialApiMm": 120
+    },
+    {
+      "id": "slope-north",
+      "lat": 26.252,
+      "lon": 92.96,
+      "region": "NE_HIMALAYA",
+      "slopeDeg": 30,
+      "initialApiMm": 90
+    }
+  ],
+  "urbanCells": [],
+  "nodeGroups": [
+    {
+      "id": "wl",
+      "role": "river_gauge",
+      "perStation": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "seis",
+      "role": "seismic_station",
+      "count": 5,
+      "kinds": [
+        "tremor"
+      ],
+      "solarPowered": false
+    },
+    {
+      "id": "slope",
+      "role": "slope_monitor",
+      "perSlope": true,
+      "kinds": [
+        "soil",
+        "tilt",
+        "rain"
+      ]
+    },
+    {
+      "id": "rain",
+      "role": "rain_gauge",
+      "count": 14,
+      "kinds": [
+        "rain",
+        "temp",
+        "humidity",
+        "pressure"
+      ]
+    },
+    {
+      "id": "sos",
+      "role": "panic_button",
+      "count": 8,
+      "kinds": [
+        "sos"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "atHours": 1,
+      "type": "storm",
+      "params": {
+        "lat": 26.17,
+        "lon": 92.89,
+        "peakIntensity": 34,
+        "radiusKm": 7,
+        "lifetimeSec": 14400
+      },
+      "note": "Antecedent rainfall primes the slopes — pore pressure elevated before the quake"
+    },
+    {
+      "atHours": 4,
+      "type": "earthquake",
+      "params": {
+        "lat": 26.24,
+        "lon": 92.95,
+        "magnitude": 6.4,
+        "depthKm": 14
+      },
+      "note": "CASCADE STAGE 1 — mainshock. P-wave arrives ahead of S-wave: that gap is the early-warning window. Omori aftershocks follow automatically"
+    },
+    {
+      "atHours": 4.1,
+      "type": "blockage",
+      "params": {
+        "stationId": "trib-lower",
+        "factor": 0.88,
+        "impoundUpstream": "trib-upper"
+      },
+      "note": "CASCADE STAGE 2 — co-seismic landslide dams the tributary. Downstream discharge collapses so trib-lower FALLS, while the withheld water impounds behind the dam and trib-upper RISES steadily with no new rainfall"
+    },
+    {
+      "atHours": 6,
+      "type": "storm",
+      "params": {
+        "lat": 26.18,
+        "lon": 92.9,
+        "peakIntensity": 42,
+        "radiusKm": 6,
+        "lifetimeSec": 10800
+      },
+      "note": "Further rain fills the impoundment faster, shortening time to breach"
+    },
+    {
+      "atHours": 10,
+      "type": "blockage",
+      "params": {
+        "stationId": "trib-lower",
+        "factor": 0,
+        "impoundUpstream": "trib-upper"
+      },
+      "note": "CASCADE STAGE 4 — landslide dam breaches. The impounded volume is released as an outburst flood wave, far more destructive than the original rainfall flood"
+    },
+    {
+      "atHours": 10.3,
+      "type": "sos",
+      "params": {
+        "nodeId": "sos-4"
+      },
+      "note": "Panic button downstream of the breach"
+    },
+    {
+      "atHours": 10.8,
+      "type": "surge",
+      "params": {
+        "stationId": "bp-main",
+        "cumecs": 1800
+      },
+      "note": "CASCADE STAGE 5 — outburst wave reaches the Brahmaputra main stem"
+    }
+  ]
+}

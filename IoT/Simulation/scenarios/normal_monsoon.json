@@ -1,0 +1,132 @@
+{
+  "name": "normal_monsoon",
+  "title": "Normal monsoon baseline — Brahmaputra valley",
+  "description": "Routine monsoon conditions with no scripted disaster. Use this as the control run: storms form, drift and decay, rivers respond with lag, nodes drift and occasionally fault. Nothing should escalate to a high-risk zone.",
+  "region": {
+    "center": {
+      "lat": 26.2006,
+      "lon": 92.9376
+    },
+    "latSpan": 0.12,
+    "lonSpan": 0.12,
+    "climateZone": "plains"
+  },
+  "startTime": "2026-07-12T00:00:00Z",
+  "seed": 20260712,
+  "timeScale": 120,
+  "durationHours": 72,
+  "riverStations": [
+    {
+      "id": "bp-main",
+      "name": "Brahmaputra main stem (Kaliabor reach)",
+      "lat": 26.23,
+      "lon": 92.91,
+      "isMainStem": true,
+      "catchmentAreaKm2": 20000,
+      "runoffCoefficient": 0.35,
+      "bedLevelM": 72,
+      "dangerLevelM": 78,
+      "hflM": 79.6,
+      "baseflowCumecs": 8000,
+      "ratingA": 1000,
+      "ratingB": 1.9,
+      "kMinutes": 960
+    },
+    {
+      "id": "trib-kopili",
+      "name": "Kopili tributary confluence",
+      "lat": 26.165,
+      "lon": 92.97,
+      "catchmentAreaKm2": 1200,
+      "runoffCoefficient": 0.35,
+      "bedLevelM": 74,
+      "dangerLevelM": 79,
+      "hflM": 80.2,
+      "baseflowCumecs": 150,
+      "ratingA": 60,
+      "ratingB": 1.9,
+      "kMinutes": 90
+    }
+  ],
+  "slopeUnits": [
+    {
+      "id": "slope-north",
+      "lat": 26.252,
+      "lon": 92.96,
+      "region": "NE_HIMALAYA",
+      "slopeDeg": 31,
+      "initialApiMm": 35
+    },
+    {
+      "id": "slope-east",
+      "lat": 26.19,
+      "lon": 92.99,
+      "region": "NE_HIMALAYA",
+      "slopeDeg": 24,
+      "initialApiMm": 28
+    }
+  ],
+  "urbanCells": [],
+  "nodeGroups": [
+    {
+      "id": "rain",
+      "role": "rain_gauge",
+      "count": 18,
+      "kinds": [
+        "rain",
+        "temp",
+        "humidity",
+        "pressure"
+      ]
+    },
+    {
+      "id": "wl",
+      "role": "river_gauge",
+      "perStation": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "slope",
+      "role": "slope_monitor",
+      "perSlope": true,
+      "kinds": [
+        "soil",
+        "tilt",
+        "rain"
+      ]
+    },
+    {
+      "id": "seis",
+      "role": "seismic_station",
+      "count": 4,
+      "kinds": [
+        "tremor"
+      ],
+      "solarPowered": false
+    },
+    {
+      "id": "aq",
+      "role": "air_quality",
+      "count": 5,
+      "kinds": [
+        "co",
+        "pm25",
+        "temp",
+        "humidity",
+        "wind"
+      ]
+    },
+    {
+      "id": "sos",
+      "role": "panic_button",
+      "count": 6,
+      "kinds": [
+        "sos"
+      ]
+    }
+  ],
+  "events": []
+}

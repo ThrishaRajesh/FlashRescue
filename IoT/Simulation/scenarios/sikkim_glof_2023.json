@@ -1,0 +1,147 @@
+{
+  "name": "sikkim_glof_2023",
+  "title": "South Lhonak glacial lake outburst flood (Teesta valley, 3-4 Oct 2023)",
+  "description": "Moraine collapse empties South Lhonak lake, sending a flood wave 67 km down the Teesta in roughly 2h20m (~30 km/h). The signature that makes this scenario valuable: the seismic station records the moraine collapse BEFORE any water sensor moves, and the lake gauge FALLS while downstream gauges spike in sequence. No rainfall is involved at all.",
+  "region": {
+    "center": { "lat": 27.7, "lon": 88.45 },
+    "latSpan": 1.0,
+    "lonSpan": 0.7,
+    "climateZone": "hills"
+  },
+  "startTime": "2023-10-03T18:00:00Z",
+  "seed": 20231003,
+  "timeScale": 30,
+  "durationHours": 8,
+  "gridHint": {
+    "note": "Set these so risk_predictor.cjs covers the Teesta valley rather than the default Assam box",
+    "CENTER_LAT": "27.7",
+    "CENTER_LON": "88.45",
+    "LAT_SPAN": "1.0",
+    "LON_SPAN": "0.7"
+  },
+  "riverStations": [
+    {
+      "id": "lake-lhonak",
+      "name": "South Lhonak glacial lake gauge",
+      "lat": 27.9100,
+      "lon": 88.1900,
+      "catchmentAreaKm2": 80,
+      "runoffCoefficient": 0.6,
+      "bedLevelM": 5180.0,
+      "dangerLevelM": 5200.0,
+      "hflM": 5201.5,
+      "baseflowCumecs": 60,
+      "ratingA": 30,
+      "ratingB": 1.8,
+      "kMinutes": 30
+    },
+    {
+      "id": "chungthang",
+      "name": "Chungthang (Teesta Stage III dam site)",
+      "lat": 27.6000,
+      "lon": 88.6400,
+      "catchmentAreaKm2": 1200,
+      "runoffCoefficient": 0.5,
+      "bedLevelM": 1550.0,
+      "dangerLevelM": 1557.0,
+      "hflM": 1559.0,
+      "baseflowCumecs": 280,
+      "ratingA": 70,
+      "ratingB": 1.85,
+      "kMinutes": 45
+    },
+    {
+      "id": "dikchu",
+      "name": "Dikchu",
+      "lat": 27.4200,
+      "lon": 88.5100,
+      "catchmentAreaKm2": 1900,
+      "runoffCoefficient": 0.5,
+      "bedLevelM": 760.0,
+      "dangerLevelM": 767.0,
+      "hflM": 769.0,
+      "baseflowCumecs": 360,
+      "ratingA": 85,
+      "ratingB": 1.85,
+      "kMinutes": 60
+    },
+    {
+      "id": "singtam",
+      "name": "Singtam",
+      "lat": 27.2350,
+      "lon": 88.5000,
+      "catchmentAreaKm2": 2400,
+      "runoffCoefficient": 0.5,
+      "bedLevelM": 420.0,
+      "dangerLevelM": 427.0,
+      "hflM": 429.0,
+      "baseflowCumecs": 420,
+      "ratingA": 95,
+      "ratingB": 1.85,
+      "kMinutes": 75
+    }
+  ],
+  "slopeUnits": [
+    {
+      "id": "slope-moraine",
+      "lat": 27.9050,
+      "lon": 88.1950,
+      "region": "NE_HIMALAYA",
+      "slopeDeg": 34,
+      "initialApiMm": 15,
+      "creepDegPerHour": 0.004
+    }
+  ],
+  "urbanCells": [],
+  "nodeGroups": [
+    { "id": "wl", "role": "river_gauge", "perStation": true, "kinds": ["water", "rain"] },
+    {
+      "id": "seis",
+      "role": "seismic_station",
+      "count": 3,
+      "kinds": ["tremor"],
+      "solarPowered": false
+    },
+    { "id": "slope", "role": "slope_monitor", "perSlope": true, "kinds": ["soil", "tilt", "rain"] },
+    { "id": "rain", "role": "rain_gauge", "count": 8, "kinds": ["rain", "temp", "humidity", "pressure"] },
+    { "id": "sos", "role": "panic_button", "count": 5, "kinds": ["sos"] }
+  ],
+  "events": [
+    {
+      "atHours": 0.5,
+      "type": "earthquake",
+      "params": { "lat": 27.9050, "lon": 88.1950, "magnitude": 4.1, "depthKm": 3 },
+      "note": "Moraine collapse registers as a shallow seismic event — the FIRST detectable signal, minutes before any water sensor reacts"
+    },
+    {
+      "atHours": 0.55,
+      "type": "lake_drain",
+      "params": { "stationId": "lake-lhonak", "stageDropM": 18, "baseflowCumecs": 5 },
+      "note": "Lake gauge drops abruptly as ~38-50 Mm3 is released — a FALLING gauge is the outburst signature"
+    },
+    {
+      "atHours": 1.35,
+      "type": "surge",
+      "params": { "stationId": "chungthang", "cumecs": 7355 },
+      "note": "Flood wave reaches Chungthang ~50 min after breach; observed peak discharge ~7,355 m3/s"
+    },
+    {
+      "atHours": 2.05,
+      "type": "surge",
+      "params": { "stationId": "dikchu", "cumecs": 6200 },
+      "note": "Wave at Dikchu (~45 km) — attenuating but still far beyond danger level"
+    },
+    {
+      "atHours": 2.85,
+      "type": "surge",
+      "params": { "stationId": "singtam", "cumecs": 5400 },
+      "note": "Wave at Singtam (~60-67 km), ~2h20m after breach, consistent with ~30 km/h celerity"
+    },
+    {
+      "atHours": 1.6,
+      "type": "sos",
+      "params": { "nodeId": "sos-2" },
+      "note": "Downstream panic button after the wave passes Chungthang"
+    }
+  ]
+}

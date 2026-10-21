@@ -1,0 +1,189 @@
+{
+  "name": "cyclone_amphan",
+  "title": "Super cyclonic storm making landfall on the Bengal coast (Amphan 2020 pattern)",
+  "description": "A cyclone tracks north across the Bay of Bengal and makes landfall near the Sundarbans. The barometric sensors are the stars here: pressure begins falling many hours before destructive wind arrives, making it the genuine leading indicator. Storm surge is amplified by the shallow Bengal shelf, then inland flooding follows as the system fills and dumps rain.",
+  "region": {
+    "center": {
+      "lat": 21.8,
+      "lon": 88.3
+    },
+    "latSpan": 1.2,
+    "lonSpan": 1,
+    "climateZone": "coastal"
+  },
+  "startTime": "2020-05-20T00:00:00Z",
+  "seed": 20200520,
+  "timeScale": 240,
+  "durationHours": 36,
+  "gridHint": {
+    "note": "Point risk_predictor.cjs at the Bengal coast / Sundarbans",
+    "CENTER_LAT": "21.8",
+    "CENTER_LON": "88.3",
+    "LAT_SPAN": "1.2",
+    "LON_SPAN": "1.0"
+  },
+  "riverStations": [
+    {
+      "id": "hooghly",
+      "name": "Hooghly estuary (Diamond Harbour)",
+      "lat": 22.19,
+      "lon": 88.19,
+      "tidal": true,
+      "catchmentAreaKm2": 4200,
+      "runoffCoefficient": 0.5,
+      "bedLevelM": 0.5,
+      "dangerLevelM": 5.5,
+      "hflM": 6.8,
+      "baseflowCumecs": 900,
+      "ratingA": 150,
+      "ratingB": 1.85,
+      "kMinutes": 120,
+      "floodplainWidthRatio": 20
+    },
+    {
+      "id": "matla",
+      "name": "Matla river (Canning)",
+      "lat": 22.31,
+      "lon": 88.67,
+      "tidal": true,
+      "catchmentAreaKm2": 1800,
+      "runoffCoefficient": 0.55,
+      "bedLevelM": 0.4,
+      "dangerLevelM": 5,
+      "hflM": 6.2,
+      "baseflowCumecs": 400,
+      "ratingA": 90,
+      "ratingB": 1.85,
+      "kMinutes": 90,
+      "floodplainWidthRatio": 20
+    }
+  ],
+  "slopeUnits": [],
+  "urbanCells": [
+    {
+      "id": "urban-kolkata-s",
+      "lat": 22.48,
+      "lon": 88.36,
+      "capacityMmHr": 24,
+      "cloggingFactor": 0.4,
+      "tidal": true
+    },
+    {
+      "id": "urban-sundarban",
+      "lat": 21.95,
+      "lon": 88.7,
+      "capacityMmHr": 10,
+      "cloggingFactor": 0.55,
+      "tidal": true
+    }
+  ],
+  "nodeGroups": [
+    {
+      "id": "wl",
+      "role": "river_gauge",
+      "perStation": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "urb",
+      "role": "urban_waterlogging",
+      "perUrban": true,
+      "kinds": [
+        "water",
+        "rain"
+      ]
+    },
+    {
+      "id": "met",
+      "role": "weather_station",
+      "count": 18,
+      "kinds": [
+        "pressure",
+        "wind",
+        "rain",
+        "temp",
+        "humidity"
+      ]
+    },
+    {
+      "id": "sos",
+      "role": "panic_button",
+      "count": 8,
+      "kinds": [
+        "sos"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "atHours": 0.5,
+      "type": "cyclone",
+      "params": {
+        "id": "tc-amphan",
+        "name": "Simulated Amphan",
+        "lat": 20.2,
+        "lon": 87.9,
+        "centralPressureHpa": 960,
+        "targetPressureHpa": 925,
+        "rMaxKm": 45,
+        "hollandB": 1.4,
+        "bearingDeg": 20,
+        "speedKmh": 24,
+        "shelfDepthM": 18,
+        "fetchKm": 220
+      },
+      "note": "System enters the domain as a severe cyclonic storm and intensifies. Watch pressure fall at coastal nodes LONG before wind peaks"
+    },
+    {
+      "atHours": 12,
+      "type": "cyclone_landfall",
+      "params": {},
+      "note": "Landfall near the Sundarbans — the storm now begins to fill rapidly over land"
+    },
+    {
+      "atHours": 12.5,
+      "type": "surge",
+      "params": {
+        "stationId": "matla",
+        "cumecs": 1500
+      },
+      "note": "Storm surge drives estuarine water levels up; shallow shelf amplifies the surge height"
+    },
+    {
+      "atHours": 13,
+      "type": "surge",
+      "params": {
+        "stationId": "hooghly",
+        "cumecs": 1800
+      },
+      "note": "Surge propagates up the Hooghly estuary, worsened because it coincides with high tide"
+    },
+    {
+      "atHours": 14,
+      "type": "extreme_rain",
+      "params": {
+        "on": true
+      },
+      "note": "Inland rain bands — flooding continues after the wind threat has passed"
+    },
+    {
+      "atHours": 13.5,
+      "type": "sos",
+      "params": {
+        "nodeId": "sos-2"
+      },
+      "note": "Coastal village SOS during surge"
+    },
+    {
+      "atHours": 28,
+      "type": "extreme_rain",
+      "params": {
+        "on": false
+      },
+      "note": "System weakens and moves out of the domain"
+    }
+  ]
+}
