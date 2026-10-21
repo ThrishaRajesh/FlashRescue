@@ -31,7 +31,7 @@ The system provides:
 | Role | Contributor | Focus |
 |------|-------------|-------|
 | **IoT & Risk Prediction** | **Thrisha R** | Sensor networks, dynamic grid-based risk forecasting, evacuation routing |
-| **AI & Multimodal Triage** | **Vismaya M** | Vision models, disaster classification, hazard-aware routing, digital twin |
+| **AI & Multimodal Triage** | **Vismaya M** | Vision models, disaster classification, volunteer dispatch to hospitals, hospital digital twin |
 | **AI & Data Fusion** | **Yashaswini K M** | Trust scoring, data fusion, micro-task generation, volunteer allocation |
 
 ---
@@ -179,13 +179,15 @@ Intelligent pathfinding for safe, rapid evacuation:
 
 ---
 
-### 6. Digital Twin & Observability
+### 6. Volunteer Dispatch & Hospital Digital Twin
 
-Real-time situational awareness dashboard:
-- **Live Elements**: Volunteer positions, hospitals, shelters, blocked roads, risk heatmaps
-- **Hazard Visualization**: Predicted danger zones, ongoing tasks
-- **Confidence Adjustment**: Field confirmations and task closures refine confidence scores
-- **Operational Telemetry**: Latency, throughput, reroute frequency metrics
+Routes volunteers carrying casualties to hospitals while roads are closed and hospital beds are limited (`AI/Volunteer-Routing-System`):
+- **Hospital Capacity Model**: Each hospital has beds, a queue and a treatment time, so overload shows up as waiting patients
+- **Two Dispatch Rules**: *Nearest hospital* (closest with a clear road) and *Load-aware* (lowest drive time plus expected wait for a bed, counting queued patients and volunteers already on the way), switchable live
+- **Live Diversion**: A volunteer is redirected mid-journey when another hospital becomes clearly better, and every decision is logged with its reason
+- **Road Closures**: Closing a road on the map makes affected volunteers re-plan immediately; a route counts as blocked only if it runs along a closed road, not if it merely crosses it
+- **Live Elements**: Volunteer positions, hospital bed usage and queues, closed roads and casualties on a Leaflet map, driven by a server-side simulation
+- **Measured Result**: Over 30 seeded simulated scenarios with clustered casualties, load-aware dispatch cut the average wait for a bed by about 36% and the longest queue by about 73%; with spread-out or light load it made no difference. Casualties and beds are simulated, so this shows the relative difference between the rules, not real hospital performance
 
 ---
 
