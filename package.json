@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "mqtt": "^5.15.1",
+    "twilio": "^6.0.0"
+  }
+}
