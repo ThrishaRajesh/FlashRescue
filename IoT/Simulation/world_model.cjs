@@ -363,6 +363,8 @@ class WorldModel {
       simSec: Math.round(this.simSec),
       simTime: this.date.toISOString(),
       seed: this.seed,
+      center: this.center,
+      bounds: this.bounds,
       tideLevel: Number(this.tideLevel.toFixed(3)),
       solarIrradiance: Number(this.solarIrradiance.toFixed(3)),
       rain24hMm: Number(this.regionRain24h.total.toFixed(1)),
@@ -384,6 +386,8 @@ class WorldModel {
       slopes: Array.from(this.slopes.values()).map((s) => s.snapshot()),
       urban: Array.from(this.urbanCells.values()).map((u) => ({
         id: u.id,
+        lat: u.lat,
+        lon: u.lon,
         pondingMm: Number(u.pondingMm.toFixed(1)),
         peakPondingMm: Number(u.peakPondingMm.toFixed(1)),
         tideLocked: u.tideLocked,

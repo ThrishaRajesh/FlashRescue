@@ -153,6 +153,9 @@ class SlopeUnit {
     return {
       id: this.id,
       region: this.region,
+      lat: this.lat,
+      lon: this.lon,
+      slopeDeg: this.slopeDeg,
       apiMm: Number(this.apiMm.toFixed(1)),
       poreePressure: Number(this.poreePressure.toFixed(3)),
       exceedanceRatio: Number(this.lastExceedance.toFixed(3)),

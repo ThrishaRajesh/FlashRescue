@@ -6,6 +6,7 @@ decoupled microservices that communicate only over MQTT.
 
 Layout
 ------
+  dev_broker.mjs           Local MQTT broker (TCP 1883 + WebSocket 9001)
   Simulation/              Physics-based sensor world (see Simulation/README.md)
   Publishers/
     sensor_sim.cjs         Sensor network driven by the physics simulation
@@ -14,26 +15,42 @@ Layout
     risk_predictor.cjs     Risk grid, diffusion forecast, zone detection, A* routing
     alert_service.cjs      Alert generation, rate limiting, notification dispatch
   Visualization Dashboard/
-    dashboard.html         Leaflet map: heatmap, volunteers, zones, routes
+    sim_inspector.html     Physics inspector: storm cells, CWC gauges, slopes,
+                           early warning, node batteries, link health
+    dashboard.html         Operational map: heatmap, volunteers, zones, routes
     crowd_validation.html  Standalone trust-scoring demo (not wired to MQTT)
 
 Prerequisites
 -------------
   Node.js 14+            (developed against Node 20)
-  An MQTT broker         e.g. Mosquitto on localhost:1883
-  A WebSocket bridge     on localhost:9001, for the browser dashboard
-                         (browsers cannot speak raw MQTT over TCP)
+  npm install            mqtt, plus aedes for the bundled dev broker
 
-  npm install            installs mqtt (and twilio, pending replacement)
+No Mosquitto install is needed: dev_broker.mjs serves both plain MQTT for the
+Node services and MQTT-over-WebSocket for the browser, which cannot speak raw
+MQTT over TCP.
 
-Running
--------
-  Terminal 1   mosquitto -c /path/to/mosquitto.conf
-  Terminal 2   node Publishers/sensor_sim.cjs --scenario normal_monsoon
-  Terminal 3   node Publishers/volunteer_sim.cjs
-  Terminal 4   node Subscribers/risk_predictor.cjs
-  Terminal 5   node Subscribers/alert_service.cjs
-  Browser      open "Visualization Dashboard/dashboard.html"
+Quick start (two terminals)
+---------------------------
+  Terminal 1   node IoT/dev_broker.mjs
+  Terminal 2   node IoT/Publishers/sensor_sim.cjs --scenario assam_brahmaputra_flood
+  Browser      open "IoT/Visualization Dashboard/sim_inspector.html"
+
+The inspector needs only the broker and sensor_sim. It shows the physics
+directly: drifting storm cells, river stage against CWC Warning/Danger/HFL,
+slope pore pressure and I-D exceedance, urban ponding, cyclone pressure,
+earthquake early-warning lead times, node batteries, and link loss.
+
+Full stack
+----------
+  Terminal 1   node IoT/dev_broker.mjs
+  Terminal 2   node IoT/Publishers/sensor_sim.cjs --scenario normal_monsoon
+  Terminal 3   node IoT/Publishers/volunteer_sim.cjs
+  Terminal 4   node IoT/Subscribers/risk_predictor.cjs
+  Terminal 5   node IoT/Subscribers/alert_service.cjs
+  Browser      open "IoT/Visualization Dashboard/dashboard.html"
+
+To point a dashboard at a different broker, append it to the URL hash:
+  sim_inspector.html#ws://192.168.1.50:9001
 
 To inspect the simulation without a broker:
 

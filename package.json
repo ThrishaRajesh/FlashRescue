@@ -2,5 +2,9 @@
   "dependencies": {
     "mqtt": "^5.15.1",
     "twilio": "^6.0.0"
+  },
+  "devDependencies": {
+    "aedes": "^1.2.0",
+    "aedes-server-factory": "^0.2.1"
   }
 }

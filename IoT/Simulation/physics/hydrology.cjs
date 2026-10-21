@@ -245,6 +245,9 @@ class RiverStation {
     return {
       id: this.id,
       name: this.name,
+      lat: this.lat,
+      lon: this.lon,
+      bedLevelM: this.bedLevelM,
       stageM: Number(this.stage.toFixed(3)),
       dischargeCumecs: Number(this.discharge.toFixed(1)),
       state: this.state,

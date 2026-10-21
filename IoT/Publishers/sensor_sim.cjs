@@ -113,6 +113,7 @@ if (HEADLESS) {
       JSON.stringify({ event: "node_online", scenario: SCENARIO_NAME, ts: Date.now() }),
       { qos: 1, retain: true }
     );
+    publishNodeRoster();
   });
   client.on("error", (e) => {
     console.error("MQTT connection error:", e.message);
@@ -124,6 +125,36 @@ const transport = new SimulatedTransport(client, engine.rng, {
   enabled: IMPAIR,
   instant: HEADLESS,
 });
+
+/**
+ * Retained roster of the deployed network, so a dashboard opened at any time can
+ * draw every node immediately instead of waiting for the slow health cycle.
+ */
+function publishNodeRoster() {
+  client.publish(
+    "sim/nodes",
+    JSON.stringify({
+      ts: Date.now(),
+      scenario: SCENARIO_NAME,
+      title: scenario.title,
+      region: engine.world.bounds,
+      center: engine.world.center,
+      timeScale: engine.timeScale,
+      nodes: engine.nodes.map((n) => ({
+        nodeId: n.id,
+        role: n.role,
+        lat: Number(n.lat.toFixed(6)),
+        lon: Number(n.lon.toFixed(6)),
+        kinds: n.kinds,
+        stationRef: n.stationRef,
+        slopeRef: n.slopeRef,
+        urbanRef: n.urbanRef || null,
+        solarPowered: n.solarPowered,
+      })),
+    }),
+    { qos: 1, retain: true }
+  );
+}
 
 const nodeOnlineState = new Map();
 

@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FlashRescue Simulation Inspector</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121923; --panel2:#18212e; --line:#243141;
+    --text:#e6edf5; --dim:#8da2b8; --faint:#5c728f;
+    --ok:#2ecc71; --low:#f1c40f; --mod:#e67e22; --high:#e74c3c; --max:#8e2de2;
+    --accent:#36a3f7; --rain:#4fc3f7;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
+    font:13px/1.45 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif}
+  #app{display:grid;grid-template-columns:270px 1fr 330px;grid-template-rows:46px 1fr 150px;height:100%}
+  header{grid-column:1/4;display:flex;align-items:center;gap:16px;padding:0 14px;
+    background:var(--panel);border-bottom:1px solid var(--line)}
+  header h1{font-size:14px;margin:0;font-weight:650;letter-spacing:.3px}
+  header .scen{color:var(--accent);font-weight:600}
+  header .clock{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--dim)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--high);display:inline-block}
+  .dot.on{background:var(--ok)}
+  aside{background:var(--panel);overflow-y:auto;padding:10px}
+  aside.right{border-left:1px solid var(--line)}
+  aside.left{border-right:1px solid var(--line)}
+  #map{width:100%;height:100%;background:#0e141b}
+  footer{grid-column:1/4;background:var(--panel);border-top:1px solid var(--line);
+    display:grid;grid-template-columns:1fr 360px;overflow:hidden}
+  h2{font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--faint);
+    margin:14px 0 7px;font-weight:700}
+  h2:first-child{margin-top:2px}
+  .tile{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:8px 9px;margin-bottom:7px}
+  .tile .label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--faint)}
+  .tile .val{font-size:19px;font-weight:650;font-variant-numeric:tabular-nums;margin-top:2px}
+  .tile .sub{font-size:11px;color:var(--dim);margin-top:1px}
+  .st{display:inline-block;padding:1px 6px;border-radius:4px;font-size:9.5px;font-weight:700;letter-spacing:.4px}
+  .st.NORMAL{background:#17382a;color:var(--ok)}
+  .st.LOW{background:#3d3410;color:var(--low)}
+  .st.MODERATE{background:#432510;color:var(--mod)}
+  .st.HIGH{background:#43161a;color:var(--high)}
+  .st.UNPRECEDENTED{background:#2e1140;color:#c78bff}
+  .gauge{margin-bottom:11px;background:var(--panel2);border:1px solid var(--line);
+    border-radius:7px;padding:8px 9px}
+  .gauge .top{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+  .gauge .nm{font-weight:600;font-size:12px}
+  .gauge .rd{font-variant-numeric:tabular-nums;font-size:12px;color:var(--dim)}
+  .bar{position:relative;height:22px;background:#0d131b;border-radius:4px;margin-top:7px;overflow:hidden}
+  .bar .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#1b6ca8,#36a3f7);
+    transition:width .5s ease}
+  .bar .mark{position:absolute;top:0;bottom:0;width:2px}
+  .bar .mark.w{background:var(--low)}
+  .bar .mark.d{background:var(--high)}
+  .bar .mark.h{background:#c78bff}
+  .bar .lbl{position:absolute;top:1px;font-size:8.5px;color:#fff;opacity:.75;transform:translateX(3px)}
+  .meta{display:flex;justify-content:space-between;font-size:10.5px;color:var(--faint);margin-top:4px}
+  .pbar{height:6px;background:#0d131b;border-radius:3px;overflow:hidden;margin-top:4px}
+  .pbar i{display:block;height:100%;transition:width .4s}
+  .row{display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-size:11.5px}
+  .row span:last-child{font-variant-numeric:tabular-nums;color:var(--dim)}
+  #log{overflow-y:auto;padding:8px 12px;font-family:ui-monospace,Consolas,monospace;font-size:11px}
+  #log div{padding:2px 0;border-bottom:1px solid #1a222e;color:var(--dim)}
+  #log div b{color:var(--accent);font-weight:600}
+  #log div.ev{color:var(--text)}
+  #eew{border-left:1px solid var(--line);padding:9px 12px;overflow-y:auto}
+  #eew .hdr{font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--faint);font-weight:700}
+  .quake{background:#2a1116;border:1px solid #5c2027;border-radius:6px;padding:7px 9px;margin-top:7px}
+  .quake .m{font-weight:700;color:#ff8a8a}
+  .leads{display:flex;gap:9px;margin-top:5px;font-size:10.5px}
+  .leads div{background:#3a161c;border-radius:4px;padding:2px 6px}
+  .leads b{color:#ffd0d0}
+  .empty{color:var(--faint);font-size:11px;padding:6px 0}
+  .legend{font-size:10.5px;color:var(--dim)}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+  .cellinfo{font-size:10.5px;color:var(--dim);margin-top:3px}
+  .warn{background:#3d2a10;border:1px solid #6b4a16;color:#f5c97a;border-radius:6px;
+    padding:7px 9px;font-size:11px;margin-bottom:8px}
+  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#18212e;color:var(--text)}
+  .leaflet-container{background:#0e141b}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>FlashRescue <span style="color:var(--faint);font-weight:400">Simulation Inspector</span></h1>
+    <span class="scen" id="scen">waiting…</span>
+    <span id="speed" style="color:var(--dim)"></span>
+    <span class="clock"><span class="dot" id="conn"></span> <span id="clock">—</span></span>
+  </header>
+
+  <aside class="left">
+    <div id="connwarn" class="warn">
+      Not connected. Start the broker and simulator:<br><br>
+      <code>node IoT/dev_broker.mjs</code><br>
+      <code>node IoT/Publishers/sensor_sim.cjs --scenario assam_brahmaputra_flood</code>
+    </div>
+    <h2>Rainfall</h2>
+    <div class="tile"><div class="label">24-hour accumulation</div>
+      <div class="val" id="rain24">—</div><div class="sub" id="imdband">IMD band</div></div>
+    <div class="tile"><div class="label">Active storm cells</div>
+      <div class="val" id="cells">—</div><div class="sub" id="cellstat">—</div></div>
+    <h2>Network</h2>
+    <div class="tile"><div class="label">Nodes reporting</div>
+      <div class="val" id="nodesalive">—</div><div class="sub" id="nodesub">—</div></div>
+    <div class="tile"><div class="label">Lowest battery</div>
+      <div class="val" id="batt">—</div><div class="sub" id="battsub">solar + duty cycling</div></div>
+    <h2>Link</h2>
+    <div class="tile"><div class="label">Packets delivered / dropped</div>
+      <div class="val" id="tx">—</div><div class="sub" id="txsub">rain fade, jitter, outages</div></div>
+    <h2>Atmosphere</h2>
+    <div class="tile">
+      <div class="row"><span>Temperature</span><span id="atemp">—</span></div>
+      <div class="row"><span>Humidity</span><span id="ahum">—</span></div>
+      <div class="row"><span>Pressure</span><span id="apres">—</span></div>
+      <div class="row"><span>Wind</span><span id="awind">—</span></div>
+      <div class="row"><span>Cloud</span><span id="acloud">—</span></div>
+      <div class="row"><span>Heat wave</span><span id="aheat">—</span></div>
+    </div>
+    <h2>Map legend</h2>
+    <div class="legend">
+      <div><i style="background:var(--rain)"></i>storm cell (size = radius)</div>
+      <div><i style="background:var(--ok)"></i>node reporting</div>
+      <div><i style="background:var(--low)"></i>node duty-cycled</div>
+      <div><i style="background:var(--high)"></i>node offline</div>
+      <div><i style="background:#c78bff"></i>river gauge (CWC colour)</div>
+      <div><i style="background:#ff7043"></i>fire front</div>
+    </div>
+  </aside>
+
+  <div id="map"></div>
+
+  <aside class="right">
+    <h2>River gauges — CWC levels</h2>
+    <div id="gauges"><div class="empty">no stations yet</div></div>
+    <h2>Slope stability</h2>
+    <div id="slopes"><div class="empty">no slope units</div></div>
+    <h2>Urban waterlogging</h2>
+    <div id="urban"><div class="empty">none in this scenario</div></div>
+    <h2>Cyclone</h2>
+    <div id="cyclone"><div class="empty">none active</div></div>
+  </aside>
+
+  <footer>
+    <div id="log"><div>Scenario timeline will appear here.</div></div>
+    <div id="eew"><div class="hdr">Earthquake early warning</div>
+      <div class="empty" id="eewempty">No events detected yet.</div></div>
+  </footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/mqtt@5.15.1/dist/mqtt.min.js"></script>
+<script>
+const WS_URL = (location.hash || "#ws://localhost:9001").slice(1);
+
+const map = L.map("map", { zoomControl:true, attributionControl:false }).setView([26.2,92.94], 11);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom:19 }).addTo(map);
+
+const layers = {
+  storms:   L.layerGroup().addTo(map),
+  nodes:    L.layerGroup().addTo(map),
+  stations: L.layerGroup().addTo(map),
+  slopes:   L.layerGroup().addTo(map),
+  fires:    L.layerGroup().addTo(map),
+  cyclone:  L.layerGroup().addTo(map),
+  urban:    L.layerGroup().addTo(map),
+};
+
+const STATE_COLOR = {
+  NORMAL:"#2ecc71", LOW:"#f1c40f", MODERATE:"#e67e22", HIGH:"#e74c3c", UNPRECEDENTED:"#c78bff",
+};
+const el = (id) => document.getElementById(id);
+let fitted = false;
+let nodeRoster = new Map();
+let nodeStatus = new Map();
+
+function logLine(text, isEvent) {
+  const box = el("log");
+  const d = document.createElement("div");
+  if (isEvent) d.className = "ev";
+  d.innerHTML = text;
+  box.prepend(d);
+  while (box.childElementCount > 120) box.lastElementChild.remove();
+}
+
+/* ---------- MQTT ---------- */
+const client = mqtt.connect(WS_URL, { reconnectPeriod: 2000 });
+
+client.on("connect", () => {
+  el("conn").classList.add("on");
+  el("connwarn").style.display = "none";
+  client.subscribe(["sim/world","sim/events","sim/stats","sim/nodes","events/seismic","nodes/+/status"]);
+  logLine("<b>connected</b> to " + WS_URL);
+});
+client.on("close", () => {
+  el("conn").classList.remove("on");
+  el("connwarn").style.display = "block";
+});
+
+client.on("message", (topic, buf) => {
+  let msg;
+  try { msg = JSON.parse(buf.toString()); } catch { return; }
+  if (topic === "sim/world")        return onWorld(msg);
+  if (topic === "sim/nodes")        return onRoster(msg);
+  if (topic === "sim/stats")        return onStats(msg);
+  if (topic === "sim/events")       return onEvent(msg);
+  if (topic === "events/seismic")   return onSeismic(msg);
+  if (topic.endsWith("/status"))    return onNodeStatus(msg);
+});
+
+/* ---------- handlers ---------- */
+function onRoster(m) {
+  el("scen").textContent = m.title || m.scenario;
+  el("speed").textContent = m.timeScale ? `${m.timeScale}× real time` : "";
+  nodeRoster = new Map(m.nodes.map((n) => [n.nodeId, n]));
+  if (m.region && !fitted) {
+    map.fitBounds([[m.region.minLat,m.region.minLon],[m.region.maxLat,m.region.maxLon]], { padding:[25,25] });
+    fitted = true;
+  }
+  drawNodes();
+  logLine(`<b>network</b> ${m.nodes.length} nodes deployed`);
+}
+
+function onNodeStatus(m) {
+  nodeStatus.set(m.nodeId, m);
+  drawNodes();
+  if (m.event === "node_offline") logLine(`<b>${m.nodeId}</b> went offline — ${m.reason}`);
+}
+
+function drawNodes() {
+  layers.nodes.clearLayers();
+  for (const n of nodeRoster.values()) {
+    const st = nodeStatus.get(n.nodeId);
+    const offline = st && st.event === "node_offline";
+    const soc = st ? st.stateOfCharge : null;
+    const color = offline ? "#e74c3c" : (soc !== null && soc < 0.3) ? "#f1c40f" : "#2ecc71";
+    L.circleMarker([n.lat,n.lon], {
+      radius: 3.5, color, weight:1, fillColor:color, fillOpacity:.85,
+    }).bindPopup(
+      `<b>${n.nodeId}</b><br>${n.role}<br>${n.kinds.join(", ")}` +
+      (soc !== null ? `<br>battery ${(soc*100).toFixed(0)}%` : "") +
+      (offline ? "<br><b style='color:#e74c3c'>OFFLINE</b>" : "")
+    ).addTo(layers.nodes);
+  }
+}
+
+function onWorld(w) {
+  el("clock").textContent = new Date(w.simTime).toISOString().replace("T"," ").slice(0,16) + "Z";
+  el("rain24").textContent = w.rain24hMm.toFixed(1) + " mm";
+  el("imdband").textContent = "IMD: " + w.imdBand + (w.peakRain24hMm > w.rain24hMm
+    ? ` · peak ${w.peakRain24hMm.toFixed(0)} mm (${w.peakImdBand})` : "");
+
+  const cells = w.rainfall.cells || [];
+  el("cells").textContent = cells.length;
+  const stationary = cells.filter((c) => c.stationary).length;
+  el("cellstat").textContent = w.rainfall.wet
+    ? (stationary ? `${stationary} quasi-stationary` : "wet spell")
+    : "dry spell";
+
+  // storm cells
+  layers.storms.clearLayers();
+  for (const c of cells) {
+    const strength = Math.min(1, c.intensity / 60);
+    L.circle([c.lat,c.lon], {
+      radius: c.radiusKm * 1000,
+      color: c.stationary ? "#ff6fd8" : "#4fc3f7",
+      weight: c.stationary ? 2 : 1,
+      dashArray: c.stationary ? null : "4,4",
+      fillColor:"#4fc3f7", fillOpacity: .06 + strength*0.22,
+    }).bindPopup(
+      `<b>storm cell ${c.id}</b><br>intensity ${c.intensity} mm/h<br>` +
+      `radius ${c.radiusKm} km<br>moving ${c.speedKmh} km/h @ ${c.bearingDeg}°` +
+      (c.stationary ? "<br><b style='color:#ff6fd8'>QUASI-STATIONARY</b>" : "")
+    ).addTo(layers.storms);
+  }
+
+  renderGauges(w.stations);
+  renderSlopes(w.slopes);
+  renderUrban(w.urban);
+  renderCyclone(w.cyclone);
+
+  const a = w.atmosphere;
+  el("atemp").textContent = a.temperatureC.toFixed(1) + " °C";
+  el("ahum").textContent = a.humidityPct.toFixed(0) + " %";
+  el("apres").textContent = a.pressureHpa.toFixed(1) + " hPa";
+  el("awind").textContent = a.windMs.toFixed(1) + " m/s @ " + a.windDirDeg.toFixed(0) + "°";
+  el("acloud").textContent = (a.cloudCover*100).toFixed(0) + " %";
+  el("aheat").textContent = a.heatWave === "NONE" ? "—" : `${a.heatWave} (+${a.departureC}°C)`;
+
+  // fires
+  layers.fires.clearLayers();
+  for (const f of w.fires || []) {
+    L.circle([f.lat,f.lon], {
+      radius: Math.max(f.radiusM, 150), color:"#ff7043", weight:2,
+      fillColor:"#ff5722", fillOpacity:.3,
+    }).bindPopup(`<b>${f.id}</b><br>radius ${f.radiusM} m<br>intensity ${f.intensity}` +
+      (f.suppressed ? "<br>suppressed by rain" : "")).addTo(layers.fires);
+  }
+}
+
+function renderGauges(stations) {
+  const box = el("gauges");
+  if (!stations || !stations.length) { box.innerHTML = '<div class="empty">no stations</div>'; return; }
+  layers.stations.clearLayers();
+  box.innerHTML = "";
+
+  for (const s of stations) {
+    // Scale the bar from bed level to a little above the record flood level.
+    const lo = s.bedLevelM, hi = s.hflM + (s.hflM - s.dangerLevelM) * 0.8;
+    const pct = (v) => Math.max(0, Math.min(100, ((v - lo) / (hi - lo)) * 100));
+    const rising = s.risingRateMPerHour;
+    const arrow = rising > 0.002 ? "▲" : rising < -0.002 ? "▼" : "▬";
+
+    const div = document.createElement("div");
+    div.className = "gauge";
+    div.innerHTML =
+      `<div class="top"><span class="nm">${s.id}</span>
+         <span class="st ${s.state}">${s.state}</span></div>
+       <div class="rd">${s.stageM.toFixed(2)} m &nbsp;${arrow} ${(rising*100).toFixed(1)} cm/h
+         &nbsp;·&nbsp; ${Math.round(s.dischargeCumecs).toLocaleString()} m³/s</div>
+       <div class="bar">
+         <div class="fill" style="width:${pct(s.stageM)}%"></div>
+         <div class="mark w" style="left:${pct(s.warningLevelM)}%"></div>
+         <div class="mark d" style="left:${pct(s.dangerLevelM)}%"></div>
+         <div class="mark h" style="left:${pct(s.hflM)}%"></div>
+       </div>
+       <div class="meta"><span>W ${s.warningLevelM}</span><span>D ${s.dangerLevelM}</span>
+         <span>HFL ${s.hflM}</span></div>
+       <div class="cellinfo">${s.aboveDangerM !== undefined ? "" : ""}
+         ${(s.stageM - s.dangerLevelM >= 0 ? "+" : "")}${(s.stageM - s.dangerLevelM).toFixed(2)} m vs danger
+         · rain24h ${s.rain24hMm} mm (${s.imdBand})
+         ${s.blockageFactor > 0 ? ` · <b style="color:#e74c3c">BLOCKED ${(s.blockageFactor*100).toFixed(0)}%</b>` : ""}</div>`;
+    box.appendChild(div);
+
+    if (s.lat != null) {
+      L.circleMarker([s.lat,s.lon], {
+        radius:8, color:"#fff", weight:1.5,
+        fillColor:STATE_COLOR[s.state]||"#999", fillOpacity:1,
+      }).bindPopup(
+        `<b>${s.name}</b><br>stage ${s.stageM.toFixed(2)} m (${s.state})<br>` +
+        `danger ${s.dangerLevelM} m · HFL ${s.hflM} m<br>` +
+        `discharge ${Math.round(s.dischargeCumecs)} m³/s<br>` +
+        `peak this run ${s.peakStageM} m (${s.peakState})`
+      ).addTo(layers.stations);
+    }
+  }
+}
+
+function renderSlopes(slopes) {
+  const box = el("slopes");
+  if (!slopes || !slopes.length) { box.innerHTML = '<div class="empty">no slope units</div>'; return; }
+  layers.slopes.clearLayers();
+  box.innerHTML = "";
+  for (const s of slopes) {
+    const sev = s.susceptibility;
+    const col = sev > .66 ? "var(--high)" : sev > .4 ? "var(--mod)" : sev > .2 ? "var(--low)" : "var(--ok)";
+    const div = document.createElement("div");
+    div.className = "gauge";
+    div.innerHTML =
+      `<div class="top"><span class="nm">${s.id}</span>
+        <span class="rd">${(sev*100).toFixed(0)}%${s.failureActive ? " <b style='color:#e74c3c'>FAILING</b>" : ""}</span></div>
+       <div class="pbar"><i style="width:${sev*100}%;background:${col}"></i></div>
+       <div class="cellinfo">${s.region} · pore ${s.poreePressure} · API ${s.apiMm} mm</div>
+       <div class="cellinfo">I/D ratio <b style="color:${s.exceedanceRatio>=1?'#e74c3c':'var(--dim)'}">${s.exceedanceRatio}</b>
+         (event ${s.eventRainMm} mm / ${s.eventDurationH} h) · tilt ${s.tiltDeg}°
+         ${s.failureCount ? ` · ${s.failureCount} failure(s)` : ""}</div>`;
+    box.appendChild(div);
+    if (s.lat != null) {
+      L.circleMarker([s.lat,s.lon], {
+        radius:6, color:"#fff", weight:1,
+        fillColor: sev>.66?"#e74c3c":sev>.4?"#e67e22":"#7f8c8d", fillOpacity:.95,
+      }).bindPopup(`<b>${s.id}</b><br>${s.region}, ${s.slopeDeg}°<br>` +
+        `susceptibility ${s.susceptibility}<br>pore pressure ${s.poreePressure}<br>` +
+        `I/D exceedance ${s.exceedanceRatio}`).addTo(layers.slopes);
+    }
+  }
+}
+
+function renderUrban(urban) {
+  const box = el("urban");
+  if (!urban || !urban.length) { box.innerHTML = '<div class="empty">none in this scenario</div>'; return; }
+  layers.urban.clearLayers();
+  box.innerHTML = "";
+  for (const u of urban) {
+    const div = document.createElement("div");
+    div.className = "gauge";
+    const frac = Math.min(1, u.pondingMm / 600);
+    div.innerHTML =
+      `<div class="top"><span class="nm">${u.id.replace("urban-","")}</span>
+        <span class="rd">${u.pondingMm.toFixed(0)} mm${u.tideLocked ? " <b style='color:#f1c40f'>TIDE-LOCKED</b>" : ""}</span></div>
+       <div class="pbar"><i style="width:${frac*100}%;background:var(--accent)"></i></div>
+       <div class="cellinfo">peak ${u.peakPondingMm} mm this run</div>`;
+    box.appendChild(div);
+    if (u.lat != null) {
+      L.circleMarker([u.lat,u.lon], {
+        radius: 5 + frac*9, color:"#36a3f7", weight:1,
+        fillColor:"#36a3f7", fillOpacity:.35,
+      }).bindPopup(`<b>${u.id}</b><br>ponding ${u.pondingMm.toFixed(0)} mm` +
+        `<br>peak ${u.peakPondingMm} mm`).addTo(layers.urban);
+    }
+  }
+}
+
+function renderCyclone(c) {
+  const box = el("cyclone");
+  layers.cyclone.clearLayers();
+  if (!c) { box.innerHTML = '<div class="empty">none active</div>'; return; }
+  box.innerHTML =
+    `<div class="gauge"><div class="top"><span class="nm">${c.name}</span>
+       <span class="st ${c.centralPressureHpa<960?"UNPRECEDENTED":"MODERATE"}">${c.category}</span></div>
+     <div class="rd">${c.centralPressureHpa} hPa · peak ${c.minPressureHpa} hPa</div>
+     <div class="cellinfo">R<sub>max</sub> ${c.rMaxKm} km ${c.landfall?"· post-landfall, filling":"· over water"}</div></div>`;
+  L.circle([c.lat,c.lon], { radius:c.rMaxKm*1000, color:"#ff6fd8", weight:2,
+    fillColor:"#ff6fd8", fillOpacity:.07 }).addTo(layers.cyclone);
+  L.circleMarker([c.lat,c.lon], { radius:6, color:"#fff", weight:2,
+    fillColor:"#ff6fd8", fillOpacity:1 }).bindPopup(
+      `<b>${c.name}</b><br>${c.centralPressureHpa} hPa<br>${c.category}`).addTo(layers.cyclone);
+}
+
+function onStats(s) {
+  el("nodesalive").textContent = `${s.nodesAlive} / ${s.nodes}`;
+  el("nodesub").textContent =
+    `${s.nodesDutyCycled} duty-cycled now · ${s.nodesOfflineAtSomePoint} outage(s) so far`;
+  el("batt").textContent = (s.lowestStateOfCharge*100).toFixed(0) + " %";
+  const t = s.transport || {};
+  el("tx").textContent = `${(t.sent||0).toLocaleString()} / ${(t.dropped||0).toLocaleString()}`;
+  const pct = t.sent ? ((t.dropped/(t.sent+t.dropped))*100).toFixed(1) : "0";
+  el("txsub").textContent = `${pct}% loss` +
+    (t.partitioned ? " · NETWORK PARTITIONED" : "") +
+    (t.queueDepth ? ` · ${t.queueDepth} buffered` : "") +
+    (t.replayed ? ` · ${t.replayed} replayed` : "");
+  el("txsub").style.color = t.partitioned ? "#e74c3c" : "";
+}
+
+function onEvent(e) {
+  const h = e.simHours.toFixed(2);
+  logLine(`<b>${h}h</b> ${e.type.toUpperCase()} — ${e.note || ""}`, true);
+}
+
+function onSeismic(e) {
+  el("eewempty").style.display = "none";
+  const d = e.firstDetection;
+  const box = el("eew");
+  const div = document.createElement("div");
+  div.className = "quake";
+  if (!d) {
+    div.innerHTML = `<span class="m">M${e.event.magnitude}</span> depth ${e.event.depthKm} km
+      <div class="cellinfo">below detection threshold</div>`;
+  } else {
+    div.innerHTML =
+      `<span class="m">M${e.event.magnitude}</span> depth ${e.event.depthKm} km
+       ${e.event.isAftershock ? '<span class="cellinfo">aftershock</span>' : ""}
+       <div class="cellinfo">detected ${d.detectionDelaySec}s after P at ${d.stationId}
+         (${d.distanceKm} km, PGA ${d.pgaG}g)</div>
+       <div class="leads">${(e.leadTimeByDistance||[]).map((l) =>
+          `<div>${l.distanceKm}km <b>${l.leadTimeSec}s</b></div>`).join("")}</div>`;
+  }
+  box.appendChild(div);
+  logLine(`<b>EEW</b> M${e.event.magnitude} detected` +
+    (d ? ` — ${(e.leadTimeByDistance||[]).map(l=>l.distanceKm+"km:"+l.leadTimeSec+"s").join(" ")}` : " (not detected)"));
+}
+</script>
+</body>
+</html>
