@@ -1,1 +1,67 @@
+# Volunteer Dispatch and Hospital Digital Twin
 
+Part of FlashRescue (Team CodeSirens, BNM Institute of Technology).
+
+Volunteers carry casualties to hospitals while roads are closed, and each hospital has a limited number of beds. The module decides which hospital every volunteer should drive to, and shows the whole situation live on a map.
+
+## What it does
+
+- **Hospital capacity model.** Each hospital has beds, a queue and a treatment time. Beds fill up, queues form and patients are treated over time.
+- **Two dispatch rules, switchable live.**
+  - *Nearest hospital*: the original rule. Closest hospital with a clear road.
+  - *Load-aware*: picks the hospital with the lowest drive time plus expected wait for a bed. It counts people already queued and volunteers already on the way, and can divert a volunteer mid-journey when another hospital becomes clearly better. Every decision is written to the log with its reason.
+- **Road closures.** Close a road by clicking two points on the map. Volunteers re-plan immediately. A route counts as blocked only when it runs along a closed road for a real distance, not when it merely crosses it at a junction.
+- **Server-side simulation.** The simulation runs on the server and the browser only displays it, so extra tabs cannot move volunteers twice.
+- **Detection reports.** The "From detection reports" button creates casualties from `../Disaster_Detection/disaster_reports.json`.
+- **Real roads.** Routes come from the public OSRM service. If it is unreachable, the module falls back to simple offline routes.
+
+## Run
+
+```
+cd AI/Volunteer-Routing-System
+npm install express socket.io
+node server.js
+```
+
+Open http://localhost:3000.
+
+| Setting | Effect |
+|---|---|
+| `OFFLINE=1` | No internet needed; straight-line routes with simple detours |
+| `SIM_SCALE=10` | Simulation speed (default 20x real time) |
+| `PORT=3001` | Different port |
+
+## Test and evaluate
+
+```
+node --test test/        # unit tests
+node eval/run.js         # compares the two rules, writes eval/results.json
+```
+
+The evaluation runs 30 seeded random scenarios per case with a road closing mid-run.
+
+| Scenario | Average wait for a bed | Longest queue |
+|---|---|---|
+| Heavy load, casualties clustered | 36% shorter | 73% shorter |
+| Heavy load, spread out | no difference | no difference |
+| Light load | no difference | no difference |
+
+Casualties, bed counts and the road model are simulated. The numbers show the relative difference between the two rules, not real hospital performance. The gain depends on how clustered the casualties are.
+
+## Layout
+
+```
+server.js        web server, simulation loop, API
+lib/geo.js       distances and the closed-road check
+lib/router.js    OSRM router and offline fallback
+lib/world.js     hospitals, volunteers, casualties, dispatch rules, metrics
+lib/data.js      loads public/Data/*.json
+public/          map interface
+eval/            scenario comparison
+test/            unit tests
+original/        the version before this rework
+```
+
+## API
+
+`GET /api/state`, `POST /api/strategy {name: "nearest"|"aware"}`, `POST /api/casualties {lat,lng} | {count} | {fromReports:true}`, `POST /api/block {coords}`, `DELETE /api/block/:id`, `POST /api/reset`, `GET /api/eval`, `GET /disasters`.
