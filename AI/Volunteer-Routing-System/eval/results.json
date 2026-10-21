@@ -1,0 +1,149 @@
+{
+  "seeds": 30,
+  "scenarios": {
+    "clustered": {
+      "label": "Heavy, clustered near the centre (60 casualties)",
+      "rows": [
+        {
+          "label": "Average time to a bed (min)",
+          "nearest": 38.55157407407408,
+          "nearestSd": 1.371097095217196,
+          "aware": 24.785925925925927,
+          "awareSd": 0.5601958676667398,
+          "change": -0.35707097514873065
+        },
+        {
+          "label": "90th percentile (min)",
+          "nearest": 63.93888888888888,
+          "nearestSd": 2.369748905800615,
+          "aware": 36.222222222222214,
+          "awareSd": 1.1371938605810403,
+          "change": -0.4334868363889131
+        },
+        {
+          "label": "Worst case (min)",
+          "nearest": 72.17222222222223,
+          "nearestSd": 4.196886706201556,
+          "aware": 42.18333333333333,
+          "awareSd": 2.9625283246028338,
+          "change": -0.41551843584019715
+        },
+        {
+          "label": "Patients arriving at a full hospital",
+          "nearest": 55.06666666666667,
+          "nearestSd": 1.236482466066094,
+          "aware": 38.93333333333333,
+          "awareSd": 1.9310331143946986,
+          "change": -0.29297820823244564
+        },
+        {
+          "label": "Longest queue at one hospital",
+          "nearest": 29.766666666666666,
+          "nearestSd": 1.838175423861631,
+          "aware": 8.1,
+          "awareSd": 0.7461009761866464,
+          "change": -0.7278835386338185
+        }
+      ],
+      "awareBetter": 30,
+      "ties": 0,
+      "diversions": 0.9666666666666667
+    },
+    "spread": {
+      "label": "Heavy, spread across the whole city (60 casualties)",
+      "rows": [
+        {
+          "label": "Average time to a bed (min)",
+          "nearest": 30.125833333333333,
+          "nearestSd": 2.4639248139265786,
+          "aware": 30.204259259259256,
+          "awareSd": 2.433280243515782,
+          "change": 0.002603278224976029
+        },
+        {
+          "label": "90th percentile (min)",
+          "nearest": 49.79444444444445,
+          "nearestSd": 3.801725566627688,
+          "aware": 49.97777777777778,
+          "awareSd": 3.7080326553092147,
+          "change": 0.0036818029677562645
+        },
+        {
+          "label": "Worst case (min)",
+          "nearest": 64.56666666666666,
+          "nearestSd": 6.849655303573881,
+          "aware": 64.72777777777777,
+          "awareSd": 6.6235387393823535,
+          "change": 0.0024952675959387417
+        },
+        {
+          "label": "Patients arriving at a full hospital",
+          "nearest": 7.433333333333334,
+          "nearestSd": 4.499506145740392,
+          "aware": 7.1,
+          "awareSd": 4.060788100849391,
+          "change": -0.04484304932735434
+        },
+        {
+          "label": "Longest queue at one hospital",
+          "nearest": 2.1666666666666665,
+          "nearestSd": 1.002773930432755,
+          "aware": 2.1333333333333333,
+          "awareSd": 0.9568466729604881,
+          "change": -0.015384615384615332
+        }
+      ],
+      "awareBetter": 3,
+      "ties": 24,
+      "diversions": 0.03333333333333333
+    },
+    "light": {
+      "label": "Light load, clustered (18 casualties, fewer than beds)",
+      "rows": [
+        {
+          "label": "Average time to a bed (min)",
+          "nearest": 11.421296296296296,
+          "nearestSd": 1.1173327610237165,
+          "aware": 11.398148148148147,
+          "awareSd": 1.1055209168012785,
+          "change": -0.002026753141467427
+        },
+        {
+          "label": "90th percentile (min)",
+          "nearest": 17.538888888888888,
+          "nearestSd": 2.316480141704992,
+          "aware": 17.522222222222222,
+          "awareSd": 2.3244805605862164,
+          "change": -0.0009502692429521158
+        },
+        {
+          "label": "Worst case (min)",
+          "nearest": 19.944444444444443,
+          "nearestSd": 5.649538383852019,
+          "aware": 19.899999999999995,
+          "awareSd": 5.6711746774563565,
+          "change": -0.00222841225626758
+        },
+        {
+          "label": "Patients arriving at a full hospital",
+          "nearest": 5.266666666666667,
+          "nearestSd": 1.9988885800753267,
+          "aware": 5.1,
+          "awareSd": 1.7953644012660308,
+          "change": -0.03164556962025322
+        },
+        {
+          "label": "Longest queue at one hospital",
+          "nearest": 2.433333333333333,
+          "nearestSd": 0.9551032521262935,
+          "aware": 2.4,
+          "awareSd": 0.9521904571390466,
+          "change": -0.013698630136986254
+        }
+      ],
+      "awareBetter": 1,
+      "ties": 29,
+      "diversions": 0.03333333333333333
+    }
+  }
+}
